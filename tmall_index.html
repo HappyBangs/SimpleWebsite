@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=utf-8">
+	<script src="assets/js/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/tmall-stylesheet.css">
+	<script>
+		$(document).ready(function(){
+			$(".drop-down-list").hover(function(){
+				$(this).children(".toggle-div").toggle();
+				// $(".drop-down-list .menu-bd").toggle();
+
+			});
+			$(".menu-nav-container-ul li").mouseenter(function(){
+				$(this).children(".prosmore").fadeIn();
+				$(this).addClass("bg-red");
+				$(this).css("padding-left","55px");
+
+				var li_id=$(this).attr("id");
+				if(li_id){
+					/*图片从大变小的动画效果*/
+					var div_id="#"+li_id+"-div";
+					$(".banner-container").hide();
+					var father_bgColor = $(div_id).attr("bgColor");
+					$("#fp-category-menu").css("background-color",father_bgColor);
+					$(div_id+" img").css("width","840px");
+					$(div_id+" img").css("height","510px");
+					
+					$(div_id).show();
+					$(div_id+" img").animate({
+						width:'810px',/*这里如果换成-=30px,那么我乱晃的时候就会有bug，why*/
+						height:'480px'
+					},"slow");
+
+				}
+			});
+			$(".menu-nav-container-ul li").mouseleave(function(){
+				$(this).children(".prosmore").fadeOut();
+				$(this).removeClass("bg-red");
+				$(this).css("padding-left","50px");
+
+			});
+		});
+	</script>
+	<title>Tmall 天猫</title>
+</head>
+<body>
+	<div id="site-nav">
+		<div id="sn-bd">
+			<p class="back-home">
+				<a href="https://www.tmall.com">天猫首页</a>
+			</p>
+			<p class="sn-login-part">
+				<em>欢迎来到天猫</em>
+				<a href="">请登录</a>
+				<a href="">免费注册</a>
+			</p>
+			<ul class="right-ul">
+				<li class="sn-tmall-bao">
+					<a href="">天猫宝</a>
+				</li>
+				<li>
+					<div class="drop-down-list">
+						<a href="">我的淘宝<span class="triangle"></span></a>
+						<div class="toggle-div menu-bd">
+							<a href="">已买到的宝贝</a>
+							<a href="">已卖出的宝贝</a>
+						</div>
+					</div>
+				</li>
+				<li class="sn-mybrand">
+					<a href="">我关注的品牌</a>
+				</li>
+				<li class="sn-seperate"></li>
+				<li class="sn-cart">
+					<img src="images/cart.png" style="height:26px;float:left;">
+					<a href="">购物车<span>0</span>件</a>
+				</li>
+				<li class="sn-sitemap">
+					<div class="drop-down-list">
+						<a href="">网站导航<span class="triangle"></span></a>
+						<div class="menu-bd sn-sitemap-div toggle-div ">
+							网站导航的菜单
+						</div>
+					</div>
+				</li>
+			</ul>	
+		</div>
+
+	</div>
+	<div id="header">
+		<div class="header-layout">
+			<h1 id="mallLogo">
+				<a style="float:left;" title="上天猫，就够了" ><img src="images/headerlogo.png"></a>
+			</h1>
+			<div id="header-searchbar">
+				<form class="search-top-form">
+					<input placeholder="家电换新季，给你清凉一夏">
+					<button type="submit">搜索</button>
+				</form>
+				<ul><li>防晒霜</li><li class="font-red">行车记录仪</li></ul>
+			</div>	
+		</div>
+	</div>
+	<div id="content">
+		<div class="top-main-container">
+			<ul id="J_FpMainNav">
+				<li>尚天猫</li>
+				<li>喵鲜生</li>
+				<li>天猫会员</li>
+				<li>电器城</li>
+				<li>天猫超市</li>
+				<li>医药馆</li>
+				<li>阿里旅行</li>
+				<li>天猫国际</li>
+			</ul>
+		</div>
+		<div id="fp-category-menu">
+			<div class="category-nav-container">
+				<div class="category-menu-nav">
+					<h2 class="menu-title">商品服务分类</h2>
+					<ul class="menu-nav-container-ul">
+						<li>精选市场</li>
+						<li>母婴玩具</li>
+						<li>化妆品</li>
+						<li id="banner-women-clothes">化妆品－hoverme
+							<div class="prosmore">
+								<span><em > <a  href="http://www.198zone.com" title="全部"  mon="#content=全部">全部(117)</a> </em></span>
+								<span><em class="morehot"> <a class="morehot" href="http://www.198zone.com" title="火锅"  mon="#content=火锅">契尔氏(17)</a> </em></span>
+								<span><em class="morehot"> <a class="morehot" href="http://www.198zone.com" title="烧烤"  mon="#content=烧烤">MG(16)</a> </em></span>
+								<span><em > <a  href="http://www.198zone.com" title="西餐"  mon="#content=西餐">理肤泉(9)</a></em></span>
+								<span><em > <a  href="http://www.198zone.com" title="海鲜"  mon="#content=海鲜">雅漾(37)</a> </em></span>				   
+							</div>
+						</li>
+						<li>零食</li>
+						<li>进口产品</li>
+						<li>精选市场</li>
+						<li>母婴玩具</li>
+						<li>化妆品</li>
+						<li>化妆品</li>
+						<li id="banner-shoes">零食-hoverme					
+							<div class="prosmore">
+								<span><em > <a  href="http://www.198zone.com" title="全部"  mon="#content=全部">全部(117)</a> </em></span>
+								<span><em class="morehot"> <a class="morehot" href="http://www.198zone.com" title="火锅"  mon="#content=火锅">火锅(17)</a> </em></span>
+								<span><em class="morehot"> <a class="morehot" href="http://www.198zone.com" title="烧烤"  mon="#content=烧烤">烧烤(16)</a> </em></span>
+								<span><em > <a  href="http://www.198zone.com" title="西餐"  mon="#content=西餐">西餐(9)</a></em></span>
+								<span><em > <a  href="http://www.198zone.com" title="海鲜"  mon="#content=海鲜">海鲜(37)</a> </em></span>
+								<span><em > <a  href="http://www.198zone.com" title="地方菜"  mon="#content=地方菜">地方菜(5)</a> </em></span>
+								<span><em > <a  href="http://www.198zone.com" title="日韩料理"  mon="#content=日韩料理">日韩料理(2)</a> </em></span>
+								<span><em > <a  href="http://www.198zone.com" title="快餐"  mon="#content=快餐">快餐(2)</a> </em></span>
+								<span><em class="morehot"> <a class="morehot" href="http://www.198zone.com" title="蛋糕"  mon="#content=蛋糕">蛋糕(9)</a> </em></span>
+								<span><em > <a  href="http://www.198zone.com" title="其他"  mon="#content=其他">其他(7)</a> </em></span>
+								<span><em > <a  href="http://www.198zone.com" title="下午茶"  mon="#content=下午茶">下午茶(5)</a> </em></span>
+								<span><em > <a  href="http://www.198zone.com" title="咖啡"  mon="#content=咖啡">咖啡(8)</a> </em></span>
+				    		</div>
+				    	</li>
+						<li>母婴玩具</li>
+						<li>化妆品</li>
+						<li>化妆品</li>
+						<li>零食</li>
+						<li>母婴玩具</li>
+					</ul>
+
+				</div>
+				<div id="banner-women-clothes-div" style="display:block;" class="banner-container" bgColor="rgb(221,221,221)"><img src="images/huandengpian4.jpg"></div>
+				<div id="banner-shoes-div" class="banner-container" bgColor="white"><img src="images/adidas-big.jpg"></div>
+			</div>
+			
+		</div>
+	</div>
+</body>

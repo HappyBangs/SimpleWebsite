@@ -1,0 +1,2012 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="zh-CN">
+<head>	
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>tmaos</title>
+	<meta name="Keywords" content="" />
+	<link rel="stylesheet" type="text/css" media="screen,projection" charset="utf-8" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" media="screen,projection" charset="utf-8" href="css/jquery.tmailsider.css" />
+	<link rel="stylesheet"  href="css/global_v2.css" >
+    <link rel="stylesheet" href="css/commons.css">
+	<link rel="stylesheet" href="css/basic.css" />
+	<link rel="stylesheet"  href="css/lrtk.css">
+	
+<style type="text/css">
+	body,td,th {
+	font-family: "宋体";
+}
+.darks{ position:absolute; left:0; top:0;background:#000;width:190px; opacity:0;filter:alpha(opacity=0);}
+.hover .darks{background:#000;opacity:0.5;filter:alpha(opacity=50); cursor:pointer;}
+.hover .qq .darks{opacity:0;filter:alpha(opacity=0);}
+.m1{height:130px;}
+.m2{height:130px; top:130px;}
+.m3{height:130px; top:260px;}
+</style>
+<script type="text/javascript"  src="js/jquery.1.4.2-min.js"></script>
+<script type="text/javascript">
+  $(function() {
+	var WangeSlide = (function() {
+		//配置
+		var config = {
+			//是否自动切换
+			autoSwitch : true,
+			//自动切换间隔时间（毫秒）
+			interval : 6000,
+			//轮播图图片路径
+			picPath : 'images/',
+			//轮播图图片信息：图片文件名 / 图片标题 / 图片指向链接
+			picInfo : [
+				['picadv01.jpg', '全套服务，求包养！', ''],
+				['picadv02.jpg', '2012年的冬天还会冷吗？', ''],
+				['picadv03.jpg', '维度端前端网weiduduan', ''],
+				['picadv04.jpg', 'weiduduan 维度端JS代码网', ''],
+				['picadv05.jpg', 'HTC ONE 首发', ''],
+				
+			]
+		};
+		
+		//获取图片信息
+		/**
+		 * @param index 图片所在的索引值
+		**/
+		var getImgInfo = function(index) {
+			var imgSrc = config.picPath + config.picInfo[index][0],
+				imgAlt = config.picInfo[index][1],
+				imgUrl = config.picInfo[index][2],
+				imgId = 'slide_' + (index+1).toString(),
+				imgHtml = '<li id="' + imgId + '" style="background:center center no-repeat url(' + imgSrc + ')">' +
+							'	<a href="' + imgUrl +'" title="' + imgAlt + '" target="_blank" class="pic">' +
+							'"' + imgAlt + '"' +
+							'	</a>' +
+						'</li>';
+				slideTextHtml = '<a href="' + imgUrl + '" target="_blank" title="' + imgAlt + '" rel="nofollow">' + imgAlt + '</a>';
+			return {
+				imgAlt : imgAlt,
+				imgUrl : imgUrl,
+				imgHtml : imgHtml,
+				slideTextHtml : slideTextHtml
+			}
+		};
+		
+		//图片完全加载后缓慢加载显示
+		var fadeInImg = function(el, speed) {
+			el.load(function() {
+				$(this).fadeIn(speed)
+			});
+		};
+		
+		//图片切换
+		/**
+		 * @param index 图片所在的索引值
+		 * @param triggerCurEl 当前触发节点元素
+		**/
+		var imgSwitch = function(index, triggerCurEl) {
+			var slideId = 'slide_' + (index+1).toString(),
+				slideIdEl = document.getElementById(slideId);
+			if (slideIdEl) {
+				//如果已有对应的元素，则显示已有元素
+				var panelLi = $('#panel ul li', '#slide');
+				panelLi.fadeOut('slow');
+				$(slideIdEl).fadeIn('slow');
+			} else {
+				//如果还没有对应的元素，则注入元素
+				$(getImgInfo(index).imgHtml).appendTo($('#panel ul', '#slide'));
+				
+				//载入显示图片
+				fadeInImg($('.slide_thumb', slideIdEl), 'slow');
+			}
+			
+			//获取图片的 alt 作为显示信息
+			$('#slide_text').html(getImgInfo(index).slideTextHtml);
+			
+			//当前状态 cur
+			$('#trigger ul li', '#slide').removeClass('cur');
+			triggerCurEl.addClass('cur');
+		};
+		
+		//轮播图
+		var slide = function() {
+			//设置轮播图尺寸
+			$('#slide').css({
+				'width' : config.width + 'px',
+				'height' : config.height + 'px'
+			});
+			
+			//初使化轮播图，只加载第一张图片信息
+			$('#panel ul', '#slide').html(getImgInfo(0).imgHtml);
+			
+			//载入显示图片
+			fadeInImg($('.slide_thumb', '#slide_1'), 500);
+			
+			//注入背景层 + 触发器容器 + 轮播图文字容器
+			var slideBg = '<div id="slide_bg"></div>',
+				trigger = '<div id="trigger"></div>',
+				slideText = '<div id="slide_text"></div>';
+			$('#panel').after(slideBg + trigger + slideText);
+			
+			//获取图片的 alt 作为显示信息
+			$('#slide_text').html(getImgInfo(0).slideTextHtml);
+			
+			//注入触发节点
+			var triggerUl = $('<ul></ul>');
+			triggerUl.appendTo($('#trigger'));
+			for (var i=0, j=config.picInfo; i<j.length; i++) {
+				$('<li>' + (i+1).toString() + '</li>').appendTo(triggerUl);
+			}
+			
+			//当前状态 cur
+			$('#trigger ul li:first').addClass('cur');
+			
+			//点击触发节点
+			var triggerLi = $('#trigger ul li', '#slide');
+			triggerLi.click(function() {
+				var index = triggerLi.index($(this));
+				imgSwitch(index, $(this));
+			});
+			
+			//鼠标悬停时，停止切换
+			var goSwitch = true;
+			$('#slide').hover(
+				function() {goSwitch = false},
+				function() {goSwitch = true}
+			);
+			
+			//自动切换
+			if (config.autoSwitch) {
+				setInterval(function() {
+					if (goSwitch) {
+						//判断当前cur所在的索引值
+						var index = parseInt($('.cur', '#trigger').text()) - 1;
+						if (index > (config.picInfo.length-2)) {
+							index = -1;
+						}
+						imgSwitch((index+1), $('#trigger ul li:eq(' + (index+1) + ')'));
+					}
+				}, config.interval);
+			}
+		};
+		
+		return {
+			//初使化
+			init : function() {
+				slide();
+			}
+		}
+	})();
+	
+	WangeSlide.init();
+})
+</script>
+<script type="text/javascript" src="js/scrolltop.js"> </script>
+<!--<script type="text/javascript" >
+$(function ()
+{
+  $(".floor-maskItem").mouseover(function(){
+			$(this).addClass("qq").parent().addClass("hover");
+		}).mouseout(function(){
+			$(this).removeClass("qq").parent().removeClass("hover");
+		});
+})
+</script>-->
+<script>
+   $(function() {
+     
+	$(".j_MaskBanner").find("a").each(function() {
+		$(this).hover(function() {
+			$(this).siblings().find(".darks").stop();
+			$(this).siblings().find(".darks").fadeTo("fast",0.3);
+		},
+		function() {
+			$(this).siblings().find(".darks").stop();
+			$(this).siblings().find(".darks").fadeTo("fast",0);
+		});
+	});
+})
+</script>
+</head>
+<body style="overflow-x:hidden;">
+
+	<div class="yourweb_main" id="options-examples">
+	
+		<!-- TOP START -->
+         <div id="site-nav">
+    <div id="sn-bg">
+        <div class="sn-bg-right">
+        </div>
+    </div>
+    <div id="sn-bd">
+        <b class="sn-edge"></b>
+
+        <div class="sn-container">
+            <p id="login-info" class="sn-login-info">
+              亲！&nbsp;<a href="../login/login.html">登录吧</a>
+            </p>
+		
+            <ul class="sn-quick-menu">
+                <li class="sn-mytaobao menu-item j_MyTaobao">
+                    <div class="sn-menu">
+                        <a class="menu-hd"
+                           rel="nofollow">我的淘宝<b></b></a>
+                        <div class="menu-bd">
+                            <div class="menu-bd-panel" id="myTaobaoPanel">
+                                    <a  rel="nofollow">已买到的宝贝</a>
+                                    <a  rel="nofollow">已卖出的宝贝</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="sn-seller hidden j_SellerCenter">
+                    <a >商家中心</a>
+                </li>
+                <li class="sn-mybrand">
+                    <a  id="J_SnMyBrand" class="sn-mybrand-link" >我关注的品牌</a>
+                </li>
+                <li class="cart">
+                    <a rel="nofollow">
+                        <s>
+                        </s>购物车
+                    </a>
+                </li>
+                <li class="sn-favorite menu-item">
+                    <div class="sn-menu">
+                        <a class="menu-hd"
+                            rel="nofollow">收藏夹<b></b></a>
+
+                        <div class="menu-bd">
+                            <div class="menu-bd-panel">
+                                    <a 
+                                       rel="nofollow">收藏的宝贝</a>
+                                    <a 
+                                       rel="nofollow">收藏的店铺</a>   
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="sn-separator"></li>
+                <li class="sn-mobile">
+                    <a title="天猫无线" >手机版</a>
+                </li>
+                <li class="sn-home">
+                    <a >淘宝网</a>
+                </li>
+                <li class="sn-sitemap menu-item">
+                    <div class="sn-menu">
+                        <a class="menu-hd" >网站导航<b></b></a>
+
+                        <div class="menu-bd">
+                            <ul>
+                               
+						<li>
+						
+							 <h3>商家：</h3> 						
+						
+														<a  >商家中心</a>
+														<a  class="sitemap-right" >商家入驻</a>
+														<a  >商家服务</a>
+														<a  class="sitemap-right"  >商家品控</a>
+													
+						</li>
+					
+						<li>
+						
+													
+						
+														<a  >天猫无线</a>
+														<a  class="sitemap-right" >品牌街</a>
+														<a >品牌特卖</a>
+														<a  class="sitemap-right"  >医药馆</a>
+														<a >天猫书城</a>
+													
+						</li>
+					
+						<li>
+						
+							 <h3>帮助：</h3> 						
+						
+														<a  >帮助中心</a>
+													
+						</li>
+					
+                            </ul>
+                            <a class="sitemap-more" >更多内容<b class="sitemap-more-link"></b></a>
+                        </div>
+                    </div>
+                </li>
+                <li class="sn-mcate j_MallCateHoverTrigger" id="J_MallCate">
+                    <div class="sn-menu">
+                        <h3 class="menu-hd sn-mcate-hd">所有商品分类<b></b></h3>
+                    </div>
+                </li>            </ul>
+        </div>
+    </div>
+</div>
+
+	<div id="header">
+		<div class="headerCon">
+		
+			<!-- logo extra -->			
+			<h1 id="mallLogo">
+				<style>
+.headerCon{position:relative;}
+#site-nav {background: none !important;} 
+</style>
+<!--Logo-->
+			</h1>
+			<div id="mallSearch">
+				<form class="mallSearch-form" name="searhTop" target="_top"   class="clearfix" > 
+					<fieldset>
+					<legend>天猫搜索</legend>
+										<div class="mallSearch-input clearfix">
+						<label for="mq">搜索 天猫 商品/店铺</label>
+						<input type="text" name="q" id="mq" accesskey="s" tabindex="9" autocomplete="off" autofocus="true" x-webkit-speech="" x-webkit-grammar="builtin:search"/>
+						<button id="J_MallSearchBtn" type="submit">搜索<s></s></button>
+						<input type="hidden" name="user_action" value="initiative" />
+						<input type="hidden" name="at_topsearch" value="1" />
+						<input type="hidden" name="sort" value="st" />
+						<input id="J_Type" type="hidden" name="type" value="p" />
+						<input id="J_Cat" type="hidden" name="cat" />
+					</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+		
+    <div id="mallNav"  data-spm="3.168958.197562">
+    <div class="mallNav-con" id="J_MallNavCon">
+        <div id="mallTextNav" class="clearfix">
+            <ul class="mallNav-main">
+                
+                    <li data-catid="mallfp" class="curChn "><span class="item" >首页</span></li><li data-catid="map" ><a  >品牌街</a></li><li data-catid="temai" ><a  >品牌特卖</a></li><li data-catid="brand" ><a  >天猫原创</a></li><li data-catid="yushou" ><a  >天猫预售</a></li><li data-catid="chaoshi" class="J_DirectPromo" data-resid="395" id="J_DirectPromo_395" style="display:none"><a >天猫超市</a></li><li data-catid="3c" ><a >电器城</a></li><li data-catid="yiyao" class="mallNav-last"><a  >医药馆</a></li>                
+            </ul>
+           <ul class="mallNav-others">
+				<li class="mallNav-last mallNav-vip" data-catid="vip">				
+					<a  data-spm-anchor-id="3.1000473.197562.9"><s class="tree"></s>天猫俱乐部<b></b></a>
+				</li>
+		  </ul>
+
+        </div>
+    </div>
+</div>
+		<!-- TOP END -->
+		
+		<div style="height:60px; clear: both; padding-bottom:60px; margin-bottom:300px;">
+		 <div class="weiduduan clearfix">
+                   <div class="slide" id="slide">
+                     <div id="panel">
+                         <ul>
+                           <li><img class="loading" src="images/loading.gif" alt="" /></li>
+                       </ul>
+                     </div>
+					  
+                <div class="mScm-right j_MaskBanner">  
+                        <a  title="珠宝饰品"  ><img src="images/t1s_snxqfdxxci9agy-190-130.jpg" width="190" height="130" /><div class="darks m1" ></div></a>
+                       <br />
+                       <a  title="骆驼户外探险活动" ><img src="images/t1aaalxrfgxxci9agy-190-130.jpg" width="190" height="130" /><div class="darks m2" ></div></a>
+                      <br />
+                      <a  title="童装上新" ><img src="images/t1p01rxwhxxxci9agy-190-130.jpg" width="190" height="130" /><div class="darks m3" ></div></a>
+                      <br />
+					</div>
+					
+           </div>
+				 
+          </div>
+		  
+		</div>
+		
+		<!-- CENTER START -->
+		<div style="overflow: hidden;">
+			<div class="yourweb_container">
+				<div id="Z_RightSide" style="width: 918px; float: right; height:3360px; background: repeat-y url('images/bg_line_t.jpg') #ffffff;">
+				   	<!--floor 1 start 第一层-->
+					<div class="mallMain">
+		<div class="mallRight">
+		<div class="brand" id="J_Brand" data-spm="3.1000473.361920">
+	<h2>Hi，<span class="j_UserName">你好</span>！你可能感兴趣的品牌：</h2>
+	<div class="brandMain" id="J_BrandAd">
+		<div class="brandAd">
+			
+									<a class="brandAd-b" title=""  brand-id="29481" >
+						<img width="130" height="225" src="images/T1jhDVXfxXXXclNAI0-130-225.jpg" alt="Erdos/鄂尔多斯" />
+						<p>[Erdos/鄂尔多斯]</p>
+						<p></p>
+						<span class="mark j_CollectBrand" data-brandid="29481" offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+			
+									<a class="brandAd-s"  title="燕衔五谷爱传万家"  brand-id="7780413" >
+						<img class="logo" width="90" height="45" src="images/T1wXjnXmFoXXXQXDnq-90-45.png" alt="燕之坊" />
+						<p>[燕之坊]</p>
+						<p>燕衔五谷爱传万家</p>
+						<span class="mark j_CollectBrand" data-brandid="7780413"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+		</div>
+		<div class="brandAd">
+			
+									<a class="brandAd-s"  title=""  brand-id="75586222" >
+						<img class="logo" width="90" height="45" src="images/T1HTnTXgBiXXXQXDnq-90-45.png" alt="MXM/木村原宿" />
+						<p>[MXM/木村原宿]</p>
+						<p></p>
+						<span class="mark j_CollectBrand" data-brandid="75586222"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+			
+									<a class="brandAd-b"  title=""  brand-id="113993395" >
+						<img width="130" height="225" src="images/T1qSPVXhFfXXclNAI0-130-225.jpg" alt="REEDOON" />
+						<p>[REEDOON]</p>
+						<p></p>
+						<span class="mark j_CollectBrand" data-brandid="113993395"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+		</div>
+		<div class="brandAd">
+			
+									<a class="brandAd-s"  title="新生代丝绸品牌"  brand-id="68893777" >
+						<img  width="130" height="82" src="images/T1b6rVXhVaXXa3vv7_-130-82.jpg" alt="VOA/维欧艾" />
+						<p>[VOA/维欧艾]</p>
+						<p>新生代丝绸品牌</p>
+						<span class="mark j_CollectBrand" data-brandid="68893777"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+			
+									<a class="brandAd-s"  title=""  brand-id="28747" >
+						<img  width="130" height="82" src="images/T18enVXcFdXXa3vv7_-130-82.jpg" alt="NARUKO/牛尔" />
+						<p>[NARUKO/牛尔]</p>
+						<p></p>
+						<span class="mark j_CollectBrand" data-brandid="28747"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+			
+									<a class="brandAd-s"  title="坚持棉花坚持天然"  brand-id="4485482" >
+						<img  width="130" height="82" src="images/T19I2VXhxeXXa3vv7_-130-82.jpg" alt="棉花堂" />
+						<p>[棉花堂]</p>
+						<p>坚持棉花坚持天然</p>
+						<span class="mark j_CollectBrand" data-brandid="4485482"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+		</div>
+		<div class="brandAd">
+			
+									<a class="brandAd-s"  title="时尚优雅格调"  brand-id="3224769">
+						<img  width="130" height="82" src="images/T1qY2UXlhkXXa3vv7_-130-82.jpg" alt="Le coq sportif/公鸡" />
+						<p>[Le coq sportif/公鸡]</p>
+						<p>时尚优雅格调</p>
+						<span class="mark j_CollectBrand" data-brandid="3224769"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+			
+									<a class="brandAd-s"  title="美丽新主张"  brand-id="3612033" >
+						<img  width="130" height="82" src="images/T1NPLUXXthXXXExv7_-130-82.png" alt="珂卡芙" />
+						<p>[珂卡芙]</p>
+						<p>美丽新主张</p>
+						<span class="mark j_CollectBrand" data-brandid="3612033"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+			
+									<a class="brandAd-s"  title="精致因细节而美"  brand-id="4534848" >
+						<img class="logo" width="90" height="45" src="images/T1OtfVXnlXXXXQXDnq-90-45.png" alt="M-box/音乐盒" />
+						<p>[M-box/音乐盒]</p>
+						<p>精致因细节而美</p>
+						<span class="mark j_CollectBrand" data-brandid="4534848"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+		</div>
+		<div class="brandAd lastBrandAd">
+			
+									<a class="brandAd-b"  title=""  brand-id="80882" >
+						<img width="130" height="225" src="images/T1OfHPXXNrXXclNAI0-130-225.jpg" alt="紫罗兰" />
+						<p>[紫罗兰]</p>
+						<p></p>
+						<span class="mark j_CollectBrand" data-brandid="80882"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+			
+									<a class="brandAd-s"  title="专注内衣"  brand-id="43251" >
+						<img class="logo" width="90" height="45" src="images/T1A3nSXjtmXXXQXDnq-90-45.png" alt="三枪" />
+						<p>[三枪]</p>
+						<p>专注内衣</p>
+						<span class="mark j_CollectBrand" data-brandid="43251"  offset-brandfly="17,0"><s></s><b>关注</b></span>
+					</a>
+						    
+            </div>
+			<div class="brandRight">
+			<s class="brandShadow"></s>
+
+<div class="J_DirectPromo" id="J_DirectPromo_430" data-resid="430">
+<div class="newDiscovery">
+
+								<a   title="女人贴身之物之魅惑口红">
+					<img width="189" height="164" src="images/T1whqrXz4dXXb1upjX.jpg" alt="女人贴身之物之魅惑口红" />
+					<p><b>女人贴身之物之魅惑口红</b><span></span></p>
+				</a>
+						    
+</div>
+</div>			<div class="J_DirectPromo" id="J_DirectPromo_431" data-resid="431">
+
+								<a class="temai"  title="三折封顶，满188减20" >
+					<img width="188" height="214" src="images/T1qpOtXxJhXXb1upjX.jpg" alt="三折封顶，满188减20" />
+					<p><span>三折封顶，满188减20</span></p>
+				</a>
+						    
+</div>		</div>
+		<div class="brandRight">
+<div class="J_DirectPromo" id="J_DirectPromo_430" data-resid="430">
+<div class="newDiscovery">
+
+								<a   title="周末专享价  踏青出游装备" >
+					<img width="189" height="164" src="images/T14wqoXzBeXXbL3xED-189-164.jpg" alt="周末专享价  踏青出游装备" />
+					<p><b>周末专享价  踏青出游装备</b><span></span></p>
+				</a>
+						    
+</div>
+</div>			<div class="J_DirectPromo" id="J_DirectPromo_431" data-resid="431">
+
+								<a class="temai" title="三折封顶，满188减20" >
+					<img width="188" height="214" src="images/T174GoXCFeXXb1upjX.jpg" alt="三折封顶，满188减20" />
+					<p><span>三折封顶，满188减20</span></p>
+				</a>
+						    
+</div>	
+</div>
+
+</div>
+
+</div>
+<div style="width:auto; padding-left:10px; margin-left:3px;"><img  src="images/T12XKmXERXXXb1upjX.jpg" border="0px;"/></div>
+		</div>
+		<div class="floor" id="floor1" >
+	<h2>1F 美容珠宝<s></s></h2>
+	<div class="floorTop">
+		<ul class="floorTop-nav">
+	        
+	            	            <li><a >美白</a></li>
+	            	            <li><a>洗护</a></li>
+	            	            <li><a >男士</a></li>
+	            	            <li><a >防晒</a></li>
+	            	            <li><a >BB霜</a></li>
+	            	            <li><a >隔离</a></li>
+	            	            <li><a >黄金</a></li>
+	            	            <li><a>蓝宝石</a></li>
+	            	        
+		</ul>
+	</div>
+	
+	
+	         <div class="floorCon-slide j_SlideBanner">
+              <ul class="fCs-con">
+			    <li>
+						<a  class="floorCon-banner j_floorBanner" title="奢美汇 汇聚正品行货" >
+				<img  src="images/T13KCcXuljXXad1GY4-200-320.jpg_q90.jpg" width="200" height="300" alt="1111"  />
+			</a>
+			</li>	
+             </ul>  
+		    </div> 
+			      
+						<a  class="floorCon-banner j_floorBanner" title="洗护馆" >
+				<img src="images/T1bLmrXs8dXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="洗护馆"  />
+			</a>	
+						<a  class="floorCon-banner j_floorBanner" title="配饰" target="_blank">
+				<img src="images/T1h11uXqFcXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="配饰"  />
+			</a>	
+					
+	  
+	
+	<div class="floorCon-img j_HoverImg">
+			 
+			 <div class="floorPro">
+				<p class="floorPro-list">
+                    
+					<em>美容护肤</em>
+	                
+					
+													<a  title="美甲">美甲</a>
+													<a title="香水">香水</a>
+													<a  title="粉底液">粉底液</a>
+							                
+				</p>
+				
+										<a class="floorPro-img"  title="遮瑕" target="_blank">
+						<img src="images/T1cLGmXxlXXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="遮瑕" />
+						<p class="imgame">遮瑕</p>
+						<p class="imgTitle">靠近你 依旧零缺点</p>				
+					</a>
+						            
+			</div>
+			
+			 <div class="floorPro">
+				<p class="floorPro-list">
+                    
+					<em>时尚男女</em>
+	                
+					
+													<a  title="水晶之约">水晶之约</a>
+													<a  title="养人翡翠">养人翡翠</a>
+													<a  title="养生腰链">养生腰链</a>
+							                
+				</p>
+				
+										<a class="floorPro-img"  title="2013新款手表" >
+						<img src="images/T1ZV02XDVfXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="2013新款手表" />
+						<p class="imgame">2013新款手表</p>
+						<p class="imgTitle">腕上必备！</p>				
+					</a>
+						            
+			</div>
+		    </div>
+		
+</div>
+
+<div class="floor" id="floor2"  >
+	<h2>2F 服饰内衣<s></s></h2>
+	<div class="floorTop">
+		<ul class="floorTop-nav">
+			
+	            	            <li><a >连衣裙</a></li>
+	            	            <li><a >针织衫</a></li>
+	            	            <li><a >小西装</a></li>
+	            	            <li><a >T恤</a></li>
+	            	            <li><a>男t恤</a></li>
+	            	            <li><a >衬衫</a></li>
+	            	            <li><a>牛仔短裤</a></li>
+	            	            <li><a >文胸</a></li>
+	            	            <li><a >睡衣</a></li>
+	            	            <li><a >内裤</a></li>
+	            	        
+		</ul>
+	</div>
+
+    	
+<div class="floorCon-tab">
+			<div class="fCt-con">
+				<div class="floorCon-slide j_SlideBanner">
+                                      					
+					<ul class="fCs-con">
+						                                                       							<li><a  title="精彩纷呈 舒适自在"><img  src="images/T1OiqqXzVfXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="精彩纷呈 舒适自在" /></a></li>
+						                                                       							<li><a  title="时尚态度 精简自如"><img data-ks-lazyload-custom="images/T1s_5sXulaXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="时尚态度 精简自如" /></a></li>
+						                                                       							<li><a  title="品牌男装 夏装新体验"><img data-ks-lazyload-custom="images/T13fylXxBeXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="品牌男装 夏装新体验" /></a></li>
+				  </ul>
+					
+					<ul class="fCs-nav fCs-nav-even fCs-nav-num3">
+													<li class="active fCs-nav1"><a  title="精彩纷呈 舒适自在">精彩纷呈 舒适自在</a><s></s></li>
+													<li class=" fCs-nav2"><a  title="时尚态度 精简自如">时尚态度 精简自如</a><s></s></li>
+													<li class=" fCs-nav3"><a title="品牌男装 夏装新体验">品牌男装 夏装新体验</a><s></s></li>
+				  </ul>
+					
+				</div>
+		
+				
+										<a  class="floorCon-banner j_floorBanner" title="女装" >
+						<img src="images/T1oEKrXttcXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="女装"  />
+					</a>	
+										<a  class="floorCon-banner j_floorBanner" title="男装">
+						<img src="images/T1NDaeXw8bXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="男装"  />
+					</a>	
+										<a class="floorCon-banner j_floorBanner" title="内衣" >
+						<img src="images/T1s0qsXtlaXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="内衣"  />
+					</a>	
+									
+				
+			</div>
+  </div>
+</div>	
+<div class="floor" id="floor3"  >
+	<h2>3F 鞋包运动<s></s></h2>
+	<div class="floorTop">
+		<ul class="floorTop-nav">
+			
+	            	            <li><a >女鞋</a></li>
+	            	            <li><a >男鞋</a></li>
+	            	            <li><a >单鞋</a></li>
+	            	            <li><a >低帮鞋</a></li>
+	            	            <li><a>跑步</a></li>
+	            	            <li><a >骑行</a></li>
+	            	            <li><a >游泳</a></li>
+	            	            <li><a >女包</a></li>
+	            	            <li><a >男包</a></li>
+	            	            <li><a >旅行箱</a></li>
+	            	        
+		</ul>
+	</div>
+	
+	<div class="floorCon-slide j_SlideBanner">
+                        			
+			<ul class="fCs-con">
+				                                        					<li><a h title="【箱包】时尚进行中.."><img  src="images/T1aa1pXsXbXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="【箱包】时尚进行中.."   border="0px;"/></a></li>
+				                                        					<li><a  title="热销冲锋衣推荐"><img data-ks-lazyload-custom="images/T13SilXwxbXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="热销冲锋衣推荐"   border="0px;"/></a></li>
+				                                        					<li><a  title="绅士男鞋NEW ARRIVEL"><img data-ks-lazyload-custom="images/T1fp5mXDpfXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="绅士男鞋NEW ARRIVEL"   border="0px;"/></a></li>
+	  </ul>
+			
+			<ul class="fCs-nav fCs-nav-num3">
+									<li class="active fCs-nav1"><a  title="【箱包】时尚进行中..">【箱包】时尚进行中..</a><s></s></li>
+									<li class=" fCs-nav2"><a  title="热销冲锋衣推荐">热销冲锋衣推荐</a><s></s></li>
+									<li class=" fCs-nav3"><a title="绅士男鞋NEW ARRIVEL">绅士男鞋NEW ARRIVEL</a><s></s></li>
+	  </ul>
+			
+  </div>
+
+		
+						<a  class="floorCon-banner j_floorBanner" title="女鞋专辑" >
+				<img src="images/T1L3unXxhbXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="女鞋专辑"   border="0px;"/>			</a>	
+						<a  class="floorCon-banner j_floorBanner" title="运动大牌3折起" >
+	<img src="images/T1ZRWjXqBfXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="运动大牌3折起"  />			</a><a  class="floorCon-banner j_floorBanner" title="箱包"><img src="images/T1qiipXx8XXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="箱包"   border="0px;"/></a></div>	
+</div>
+<div style="width:auto; padding-left:10px; margin-left:3px;"><img   src="images/T1yTekXy4cXXb1upjX.jpg" border="0px;"/></div>
+
+
+<div class="floor" id="floor4" data-spm="3.359257.295831">
+    <h2>4F 母婴用品
+        <s>
+        </s>
+    </h2>
+    <div class="floorTop">
+        <ul class="floorTop-nav">
+            
+                                <li>
+                    <a >宝宝食品</a>
+                </li>
+                                <li>
+                    <a >宝宝用品</a>
+                </li>
+                                <li>
+                    <a >童装童鞋</a>
+                </li>
+                                <li>
+                    <a >玩具</a>
+                </li>
+                                <li>
+                    <a >孕产</a>
+                </li>
+                                <li>
+                    <a >宝宝爱学习</a>
+                </li>
+                                <li>
+                    <a>天猫宝宝计划</a>
+                </li>
+                            
+        </ul>
+    </div>
+	
+	 <div class="floorCon-slide j_SlideBanner">
+                        
+                <ul class="fCs-con">
+                                                            <li>
+                        <a  title="孕妈季满300减50"><img  src="images/T1j4CdXsXeXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="孕妈季满300减50"  border="0px;"/></a>
+                    </li>                                         <li>
+                        <a  title="0-16岁 童装新品"><img                             data-ks-lazyload-custom                            ="images/T1x_4vXxJXXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="0-16岁 童装新品"  border="0px;"/></a>
+                    </li>                                         <li>
+                        <a  title="宝宝奶粉过敏？"><img                             data-ks-lazyload-custom                            ="images/T1e4WgXpJeXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="宝宝奶粉过敏？"  border="0px;"/></a>
+                    </li>                 </ul>
+                <ul class="fCs-nav fCs-nav-even fCs-nav-num3">
+                                        <li class="active fCs-nav1">
+                        <a title="孕妈季满300减50">孕妈季满300减50</a>
+                        <s>
+                        </s>
+                    </li>
+                                        <li class=" fCs-nav2">
+                        <a  title="0-16岁 童装新品">0-16岁 童装新品</a>
+                        <s>
+                        </s>
+                    </li>
+                                        <li class=" fCs-nav3">
+                        <a  title="宝宝奶粉过敏？">宝宝奶粉过敏？</a>
+                        <s>
+                        </s>
+                    </li>
+            </ul>
+            
+        </div>
+        
+            <a  class="floorCon-banner j_floorBanner" title="宝宝计划" ><img src="images/T1uNagXrpaXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="宝宝计划" /></a><a  class="floorCon-banner j_floorBanner" title="精明妈咪团" ><img src="images/T1JN9eXvxaXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="精明妈咪团" border="0px;" /></a>        
+        <div class="floorCon-img j_HoverImg">
+            
+                <div class="floorPro">
+                    <p class="floorPro-list">
+                        
+                            <em>婴幼儿食品</em>
+                        
+                        
+                            <a  title="婴幼儿奶粉">婴幼儿奶粉</a>
+                            <a  title="辅食">辅食</a>
+                            <a  title="营养品">营养品</a>
+                                                    
+                    </p>
+                    
+                        <a class="floorPro-img"  title="品牌奶粉" ><img src="images/T1.i.WXndeXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="品牌奶粉"  border="0px;"/>
+                            <p class="imgame">
+                                品牌奶粉
+                            </p>
+                            <p class="imgTitle">
+                                奶粉品质推荐
+                            </p>
+                        </a>
+                                            
+                </div>
+            
+                <div class="floorPro">
+                    <p class="floorPro-list">
+                        
+                            <em>婴幼儿用品</em>
+                        
+                        
+                            <a  title="纸尿裤">纸尿裤</a>
+                            <a  title="喂哺用品">喂哺用品</a>
+                            <a  title="洗护用品">洗护用品</a>
+                                                    
+                    </p>
+                    
+                        <a class="floorPro-img"  title="品牌纸尿裤"><img src="images/T1SfRpXq4fXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="品牌纸尿裤"  border="0px;"/>
+                            <p class="imgame">
+                                品牌纸尿裤
+                            </p>
+                            <p class="imgTitle">
+                                安全，正品，放心
+                            </p>
+                        </a>                  
+                </div>
+        </div>
+       </div>
+	  <div class="floor" id="floor5"  data-spm="3.359255.295829">
+	<h2>5F 食品保健<s></s></h2>
+	<div class="floorTop">
+		<ul class="floorTop-nav">
+			
+	            	            <li><a >春茶</a></li>
+	            	            <li><a >正品名酒</a></li>
+	            	            <li><a >特产</a></li>
+	            	            <li><a>零食3折</a></li>
+	            	            <li><a >进口零食</a></li>
+	            	            <li><a >清肠养胃</a></li>
+	            	            <li><a >预防感冒</a></li>
+	            	            <li><a >滋补养生</a></li>
+	            	        
+		</ul>
+	</div>
+
+		<div class="floorCon-slide j_SlideBanner">
+                        			
+			<ul class="fCs-con">
+				                                        					<li><a title="四季皆宜好喝看的见"><img  src="images/T1IQSsXv4aXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="四季皆宜好喝看的见" /></a></li>
+				                                        					<li><a  title="进口零食 美味春天里"><img data-ks-lazyload-custom="images/T16zP8XipaXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="进口零食 美味春天里" /></a></li>
+				                                        					<li><a title="美容养颜 大家都说好！"><img data-ks-lazyload-custom="images/T1MPmpXxtaXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="320" alt="美容养颜 大家都说好！" /></a></li>
+			</ul>
+			<ul class="fCs-nav fCs-nav-num3">
+									<li class="active fCs-nav1"><a  title="四季皆宜好喝看的见">四季皆宜好喝看的见</a><s></s></li>
+									<li class=" fCs-nav2"><a  title="进口零食 美味春天里">进口零食 美味春天里</a><s></s></li>
+									<li class=" fCs-nav3"><a  title="美容养颜 大家都说好！">美容养颜 大家都说好！</a><s></s></li>
+			</ul>
+			
+		</div>
+
+		
+						<a  class="floorCon-banner j_floorBanner" title="粽子">
+				<img src="images/T1NiRJXCthXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="粽子"  />
+			</a>	
+						<a  class="floorCon-banner j_floorBanner" title="瘦" >
+				<img src="images/T1io9oXyBdXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="瘦"  />
+			</a>	
+						<a  class="floorCon-banner j_floorBanner" title="黄酒" >
+				<img src="images/T1OOukXElhXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="黄酒"  />
+			</a>	
+					
+	</div>	
+     
+	 <div class="floor" id="floor6"  data-spm="3.359258.295832">
+	<h2>6F 家电数码<s></s></h2>
+	<div class="floorTop">
+		<ul class="floorTop-nav">
+	        
+	            	            <li><a >手机</a></li>
+	            	            <li><a >数码相机</a></li>
+	            	            <li><a>笔记本</a></li>
+	            	            <li><a>平板电脑</a></li>
+	            	            <li><a >鼠标</a></li>
+	            	            <li><a>取暖器</a></li>
+	            	            <li><a >足浴器</a></li>
+	            	            <li><a >空调</a></li>
+	            	        
+		</ul>
+	</div>
+
+
+
+		<div class="floorCon-tab">
+			<div class="fCt-con">
+				<div class="floorCon-slide j_SlideBanner">
+                                       					
+					<ul class="fCs-con">
+						                                                       							<li><a  title="三星S4天猫抢先首发"><img  src="images/T1HwGhXvBgXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="三星S4天猫抢先首发" /></a></li>
+						                                                       							<li><a  title="大家电周末疯狂购"><img data-ks-lazyload-custom="images/T1qX5mXAtXXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="大家电周末疯狂购" /></a></li>
+						                                                       							<li><a  title="平板春游记 分享有礼"><img data-ks-lazyload-custom="images/T1l3WcXptXXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="平板春游记 分享有礼" /></a></li>
+				  </ul>
+					<ul class="fCs-nav fCs-nav-even fCs-nav-num3">
+													<li class="active fCs-nav1"><a  title="三星S4天猫抢先首发">三星S4天猫抢先首发</a><s></s></li>
+													<li class=" fCs-nav2"><a  title="大家电周末疯狂购">大家电周末疯狂购</a><s></s></li>
+													<li class=" fCs-nav3"><a  title="平板春游记 分享有礼">平板春游记 分享有礼</a><s></s></li>
+				  </ul>
+					
+				</div>
+
+				<div class="floorCon-img j_HoverImg">
+					 
+					 <div class="floorPro">
+						<p class="floorPro-list">
+							 
+					                <em>手机</em>
+	                                                
+							
+																	<a  title="智能手机">智能手机</a>
+																	<a  title="合约机">合约机</a>
+																	<a  title="苹果配件">苹果配件</a>
+											                
+						</p>
+						
+														<a class="floorPro-img"  title="苹果 iPhone 5" >
+								<img src="images/T10ucmXnNdXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="苹果 iPhone 5" />
+								<p class="imgame">苹果 iPhone 5</p>
+								<p class="imgTitle">合约机</p>				
+							</a>
+										            
+					</div>
+					
+					 <div class="floorPro">
+						<p class="floorPro-list">
+							 
+					                <em>电脑&外设</em>
+	                                                
+							
+																	<a  title="超极本">超极本</a>
+																	<a  title="台式机">台式机</a>
+																	<a  title="机械键盘">机械键盘</a>
+											                
+						</p>
+						
+														<a class="floorPro-img"  title="ThinkPad E430c" >
+								<img src="images/T1iPVIXtldXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="ThinkPad E430c" />
+								<p class="imgame">ThinkPad E430c</p>
+								<p class="imgTitle">i5-3210/2G/500G/独显1G</p>				
+							</a>
+										            
+					</div>
+					
+					 <div class="floorPro">
+						<p class="floorPro-list">
+							 
+					                <em>大家电</em>
+	                                                
+							
+																	<a  title="LED电视">LED电视</a>
+																	<a  title="滚筒洗衣机">滚筒洗衣机</a>
+																	<a  title="烟灶消套装">烟灶消套装</a>
+											                
+						</p>
+						
+														<a class="floorPro-img"  title="LED液晶电视" >
+								<img src="images/T1v6DRXf8oXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="LED液晶电视" />
+								<p class="imgame">LED液晶电视</p>
+								<p class="imgTitle">节能补贴400元</p>				
+							</a>
+										            
+					</div>
+					
+					 <div class="floorPro">
+						<p class="floorPro-list">
+							 
+					                <em>数码配件</em>
+	                                                
+							
+																	<a  title="蓝牙耳机">蓝牙耳机</a>
+																	<a  title="家用投影仪">家用投影仪</a>
+																	<a  title="itouch5">itouch5</a>
+											                
+						</p>
+						
+														<a class="floorPro-img"  title="佳能一体机" >
+								<img src="images/T1us7dXkXXXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="佳能一体机" />
+								<p class="imgame">佳能一体机</p>
+								<p class="imgTitle">家用复印扫描打印机</p>				
+							</a>
+										            
+					</div>
+					
+					 <div class="floorPro">
+						<p class="floorPro-list">
+							 
+					                <em>平板&相机</em>
+	                                                
+							
+																	<a  title="多功能平板">多功能平板</a>
+																	<a  title="专业单反">专业单反</a>
+																	<a  title="新款微单">新款微单</a>
+											                
+						</p>
+						
+														<a class="floorPro-img"  title="佳能650D单反（18-55）" >
+								<img src="images/T15t8TXrVcXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="佳能650D单反（18-55）" />
+								<p class="imgame">佳能650D单反（18-55）</p>
+								<p class="imgTitle">性价比之王</p>				
+							</a>
+										            
+					</div>
+					
+					 <div class="floorPro">
+						<p class="floorPro-list">
+							 
+					                <em>小家电</em>
+	                                                
+							
+																	<a  title="空气净化器">空气净化器</a>
+																	<a  title="取暖设备">取暖设备</a>
+																	<a title="按摩器材">按摩器材</a>
+											                
+						</p>
+						
+														<a class="floorPro-img"  title="科沃斯智能扫地机器人" >
+								<img src="images/T1Y5RAXDpbXXXMNuYv-150-150.jpg_q90.jpg" width="150" height="150" alt="科沃斯智能扫地机器人" />
+								<p class="imgame">科沃斯智能扫地机器人</p>
+								<p class="imgTitle">智享人生</p>				
+							</a>
+										            
+					</div>
+	
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>	
+
+    <div class="floor" id="floor7" >
+	<h2>7F 家装家饰<s></s></h2>
+	<div class="floorTop">
+		<ul class="floorTop-nav">
+			
+	            	            <li><a >门</a></li>
+	            	            <li><a>吊灯</a></li>
+	            	            <li><a >热水器</a></li>
+	            	            <li><a >床</a></li>
+	            	            <li><a >沙发</a></li>
+	            	            <li><a >柜类</a></li>
+	            	            <li><a >四件套</a></li>
+	            	            <li><a >羽绒被</a></li>
+	            	            <li><a >装修设计</a></li>
+	            	            <li><a >收纳</a></li>
+	            	        
+		</ul>
+	</div>
+		<div class="floorCon-slide j_SlideBanner">
+                        			
+			<ul class="fCs-con">
+				                                        					<li><a  title="【喜梦宝】实木公主床"><img  src="images/T1XJ5nXCXdXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="【喜梦宝】实木公主床" /></a></li>
+				                                        					<li><a  title="精品蚕丝被"><img  data-ks-lazyload-custom="images/T1DIWeXsXdXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="精品蚕丝被" /></a></li>
+				                                        					<li><a  title="遮阳挡雨 伞2折起"><img  data-ks-lazyload-custom="images/T1qqWfXBxbXXad1GY4-200-320.jpg_q90.jpg" width="200" height="320" alt="遮阳挡雨 伞2折起" /></a></li>
+			</ul>
+			<ul class="fCs-nav fCs-nav-num3">
+									<li class="active fCs-nav1"><a  title="【喜梦宝】实木公主床">【喜梦宝】实木公主床</a><s></s></li>
+									<li class=" fCs-nav2"><a title="精品蚕丝被">精品蚕丝被</a><s></s></li>
+									<li class=" fCs-nav3"><a  title="遮阳挡雨 伞2折起">遮阳挡雨 伞2折起</a><s></s></li>
+			</ul>
+			
+		</div>
+
+		
+			       <div class="J_DirectPromo promoBanner" id="J_DirectPromo_371" >			
+									<a hclass="floorCon-banner j_floorBanner" title="建材" >
+				<img src="images/T1MwVUXCVdXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="建材"  />
+			</a>
+			
+			    	<a  class="floorCon-banner j_floorBanner" title="家具" >
+				<img src="images/T1HTCjXpdhXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="家具"  />
+			</a>
+                        			                        			<a class="floorCon-banner j_floorBanner" title="收纳">
+				<img src="images/T19y4GXtFXXXXHoWL4-200-300.jpg_q90.jpg" width="200" height="300" alt="收纳"  />
+			</a>
+          </div>		
+							                        		
+                        					
+	</div>	 
+	<div style="width:auto; padding-left:10px; margin-left:3px;"><img  src="images/T1rjyjXC0gXXb1upjX.jpg" border="0px;"/></div>                       			
+	   
+	   
+	   
+	   
+	   
+	</div>	
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+		<!--floor  end -->
+		</div></div></div></div>
+		</div>
+		</div>
+		</div>
+		
+		</div>
+		<!-- CENTER START -->
+		<div style="height: 6px; clear: both;">
+		   
+		</div>
+		
+		<!-- FOOTER START -->
+<div id="footer" style="left:350px;height: 200px; background-image:url(images/fts.jpg); background-repeat:repeat-x ;"></div>
+		<div style="height:3px; clear:both; padding-left:400px;">
+		     <div id="copyright" style="margin:auto; width:998px;">
+        <!-- foot links from tms start -->
+    <p id="footer-tmallinfo" align="center">
+        <a >关于天猫</a>
+        <a >帮助中心</a>
+        <a>网站地图</a>
+        <a>诚聘英才</a>
+        <a >联系我们</a>
+        <a >网站合作</a>
+        <a>版权说明</a>
+    </p>
+    <p id="footer-otherlink">
+	<a >阿里巴巴集团</a>：	
+      阿里巴巴网络 - <a >中国站</a> <a >国际站</a> <a >全球速卖通</a> <a>日文站</a> | 
+	<a >淘宝网</a> | 
+	<a >一淘网</a> |
+	<a >聚划算</a> |
+	<a >支付宝</a> | 
+	<a >中国雅虎</a> | 
+	<a >淘宝联盟</a> | 
+        <a>集团研究中心</a> |
+        <a >淘宝天下</a> | 
+        <a >嗨淘网</a> 
+    </p>
+    <p align="center" style=" color:#999999;">Copyright&nbsp;2003-2013, 版权所有TMALL.COM <br />增值电信业务经营许可证：浙B2-20110446<br />网络文化经营许可证：<a href="http://img01.taobaocdn.com/tps/i1/T1M72qXjhgXXc1.xw7-2349-1700.jpg"  style="color:#999999;">浙网文[2012]0234-028号</a><br/>互联网医疗保健信息服务 审核同意书 浙 卫网审【2012】6号<br />互联网药品信息服务资质证书编号：浙-（经营性）-2012-0005</p>
+    <!-- foot links from tms end -->    </div>
+		</div>
+		<div style="display: none" id="goTopBtn"><img border="0px"  src="images/btop.jpg"></div>
+		<script type=text/javascript>goTopEx();</script>
+	</div>
+	
+	<div id="Z_TypeList" class="Z_TypeList">
+		<h1 class="title">
+			<a>所有商品分类</a>
+		</h1>
+		<div class="Z_MenuList">
+			<ul>
+				<li class="list-item0">
+					<h3>服装/内衣/配件</h3>
+					<p>
+						<a >女装</a>
+						<a >男装</a>
+						<a >内衣</a>
+						<a >羽绒</a>
+						<a >呢大衣</a>
+					</p>
+					<p>
+						<a >毛衣</a>
+						<a >保暖</a>
+						<a >睡衣</a>
+						<a >男羽绒</a>
+						<a >男毛衣</a>
+					</p>
+				</li>
+				<li class="list-item1 alt">
+					<h3>鞋/箱包</h3>
+					<p>
+						<a >女鞋</a>
+						<a >男鞋</a>
+						<a >雪地靴</a>
+						<a >靴子</a>
+						<a >男靴</a>
+					</p>
+					<p>
+						<a >箱包</a>
+						<a >女包</a>
+						<a >男包</a>
+						<a >拉杆箱</a>
+						<a >钱包</a>
+					</p>
+				</li>
+				<li class="list-item2">
+					<h3>珠宝饰品/手表眼睛</h3>
+					<p>
+						<a >珠宝</a>
+						<a >足金</a>
+						<a >钻戒</a>
+						<a >玉镯</a>
+						<a >珍珠</a>
+					</p>
+					<p>
+						<a >手表</a>
+						<a >饰品</a>
+						<a >毛衣链</a>
+						<a >手链</a>
+						<a >瑞士军刀</a>
+					</p>
+				</li>
+				<li class="list-item3 alt">
+					<h3>化妆品</h3>
+					<p>
+						<a >护肤</a>
+						<a >彩妆</a>
+						<a >假发</a>
+						<a >香水</a>
+						<a >男士护肤</a>
+					</p>
+					<p>
+						<a >套装</a>
+						<a >面膜</a>
+						<a >洁面</a>
+						<a >眼霜</a>
+						<a >BB霜</a>
+						<a >爽肤水</a>
+					</p>
+				</li>
+				<li class="list-item4">
+					<h3>运动户外</h3>
+					<p>
+						<a >运动鞋</a>
+						<a >运动服</a>
+						<a >户外</a>
+						<a >用品</a>
+						<a >板鞋</a>
+					</p>
+					<p>
+						<a >跑步鞋</a>
+						<a >羽绒服</a>
+						<a >冲锋衣</a>
+						<a >跑步机</a>
+					</p>
+				</li>
+				<li class="list-item5 alt">
+					<h3>手机数码</h3>
+					<p>
+						<a >手机</a>
+						<a >相机</a>
+						<a >笔记本</a>
+						<a >平板</a>
+						<a >硬件</a>
+					</p>
+					<p>
+						<a >配件</a>
+						<a >视听</a>
+						<a >移动存储</a>
+						<a >台式机</a>
+					</p>
+				</li>
+				<li class="list-item6">
+					<h3>家用电器</h3>
+					<p>
+						<a >大家电</a>
+						<a >影音</a>
+						<a >电视</a>
+						<a >耳机</a>
+						<a >厨房</a>
+					</p>
+					<p>
+						<a >生活电器</a>
+						<a >取暖器</a>
+						<a >个人护理/保健</a>
+					</p>
+				</li>
+				<li class="list-item7 alt">
+					<h3>家具建材</h3>
+					<p>
+						<a >灯具</a>
+						<a >卫浴</a>
+						<a >油漆</a>
+						<a >开关</a>
+						<a >地板</a>
+						<a >墙纸</a>
+					</p>
+					<p>
+						<a >沙发</a>
+						<a >床</a>
+						<a >衣柜</a>
+						<a >床垫</a>
+						<a >架类</a>
+						<a >工具</a>
+					</p>
+				</li>
+				<li class="list-item8">
+					<h3>家纺/居家</h3>
+					<p>
+						<a >四件套</a>
+						<a >蚕丝被</a>
+						<a >冬被</a>
+						<a >枕头</a>
+						<a >家饰</a>
+					</p>
+					<p>
+						<a >厨房</a>
+						<a >杯子</a>
+						<a >清洁</a>
+						<a >收纳</a>
+						<a >宠物</a>
+						<a >居家</a>
+					</p>
+				</li>
+				<li class="list-item9 alt">
+					<h3>母婴玩具</h3>
+					<p>
+						<a >奶粉</a>
+						<a >尿裤</a>
+						<a >童装</a>
+						<a >孕产</a>
+						<a >玩具</a>
+						<a >车床</a>
+					</p>
+					<p>
+						<a >辅食</a>
+						<a >用品</a>
+						<a >童鞋</a>
+						<a >月子</a>
+						<a >大人玩乐</a>
+					</p>
+				</li>
+				<li class="list-item10">
+					<h3>食品</h3>
+					<p>
+						<a >零食</a>
+						<a >坚果</a>
+						<a >茶叶</a>
+						<a >冲饮</a>
+						<a >粮油</a>
+						<a >生鲜</a>
+					</p>
+					<p>
+						<a >酒水</a>
+						<a >白酒</a>
+						<a >葡萄酒</a>
+						<a >巧克力</a>
+						<a >进口</a>
+					</p>
+				</li>
+				<li class="list-item11 alt">
+					<h3>医药保健</h3>
+					<p>
+						<a >保健</a>
+						<a >滋补</a>
+						<a >养生</a>
+						<a >食疗</a>
+						<a >提高免疫</a>
+					</p>
+					<p>
+						<a >药品</a>
+						<a >血压</a>
+						<a >美瞳</a>
+						<a >计生</a>
+						<a >体检</a>
+					</p>
+				</li>
+				<li class="list-item12">
+					<h3>汽车配件</h3>
+					<p>
+						<a >汽车</a>
+						<a >汽车用品</a>
+						<a >坐垫</a>
+						<a >座套</a>
+					</p>
+					<p>
+						<a >脚垫</a>
+						<a >GPS</a>
+						<a >儿童安全座椅</a>
+						<a >改装</a>
+					</p>
+				</li>
+				<li class="list-item13 alt">
+					<h3>图书音像</h3>
+					<p>
+						<a >考试</a>
+						<a >儿童</a>
+						<a >小说</a>
+						<a >外语</a>
+						<a >社科</a>
+						<a >艺术</a>
+					</p>
+					<p>
+						<a >养生</a>
+						<a >文学</a>
+						<a >动漫</a>
+						<a >杂志</a>
+						<a >心理</a>
+						<a >管理</a>
+					</p>
+				</li>
+				<li class="list-item14">
+					<h3>文化娱乐</h3>
+					<p>
+						<a >电子凭证</a>
+						<a >小猫提货</a>
+						<a >乐器</a>
+						<a >旅游</a>
+					</p>
+					<p>
+						<a >网店软件</a>
+						<a >古董字画</a>
+						<a >个性定制</a>
+					</p>
+				</li>
+				<li class="list-item15 alt">
+					<h3>手机/网游点卡</h3>
+				</li>
+			</ul>
+		</div>
+		
+			<div class="Z_SubList">
+			<div class="hide">
+			  	<h3 class="subItem-hd"><a >品牌女装</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a  >连衣裙</a>
+										<a >T恤</a>
+										<a >衬衫</a>
+										<a >裤子</a>
+										<a  >吊带/背心</a>
+										<a  >小西装</a>
+										<a  >牛仔裤</a>
+										<a  >婚纱/礼服/旗袍</a>
+										<a  >半身裙</a>
+										<a >制服/校服</a>
+										<a  >针织衫</a>
+										<a >短外套</a>
+										<a >中老年服装</a>
+										<a >雪纺衫</a>
+										<a >真皮皮衣</a>
+										<a >PU外套</a>
+										<a >风衣</a>
+										<a >唐装/中式服装</a>
+										<a >大码女装</a>
+										<a>卫衣</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >哥弟</a>
+												<a  >优衣库</a>
+												<a >三彩</a>
+												<a  >SOFA</a>
+												<a  >衣香丽影</a>
+												<a  >雅莹</a>
+												<a >玖姿</a>
+												<a >香影</a>
+												<a  >伊芙丽</a>
+												<a  >季候风</a>
+												<a >亦谷</a>
+												<a>鄂尔多斯</a>
+												<a  >夏娜</a>
+												<a >茵佳妮</a>
+												<a >歌力思</a>
+												<a >冰洁</a>
+												<a >音儿</a>
+												<a >婉甸</a>
+												<a >恩裳</a>
+												<a  >木果果木</a>
+											
+				</p>
+				
+		
+			
+				<h3 class="subItem-hd"><a >服饰配件</a></h3
+			
+			><p class="subItem-cat">
+				
+										<a  >女士腰带</a>
+										<a >男士皮带</a>
+										<a  >女士围巾</a>
+										<a  >男士围巾</a>
+										<a  >帽子</a>
+										<a >手套</a>
+										<a  >领带/领结/袖扣</a>
+										<a  >毛线</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >七匹狼</a>
+												<a >Rayli</a>
+												<a  >CARTELO</a>
+											
+				</p>
+
+			
+				<h3 class="subItem-hd"><a>精品男装</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >T恤</a>
+										<a >衬衫</a>
+										<a >POLO衫</a>
+										<a >牛仔长裤</a>
+										<a >牛仔短裤</a>
+										<a >休闲裤</a>
+										<a >针织衫</a>
+										<a >哈伦裤</a>
+										<a >夹克</a>
+										<a >西装</a>
+										<a >背心/马甲</a>
+										<a >卫衣</a>
+										<a >西裤</a>
+										<a >西服套装</a>
+										<a >风衣</a>
+										<a >皮衣</a>
+										<a >设计潮牌</a>
+										<a >大码男装</a>
+										<a >中老年男装</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a>七匹狼</a>
+												<a >JACKJONES</a>
+												<a >太平鸟</a>
+												<a >GXG</a>
+												<a >恒源祥</a>
+												<a >劲霸</a>
+												<a >马克华菲</a>
+												<a >九牧王</a>
+												<a >利郎</a>
+												<a >LEE</a>
+												<a >柒牌</a>
+												<a >LEVI'S</a>
+												<a >SELECTED</a>
+												<a >杉杉</a>
+												<a >雅戈尔</a>
+												<a >DICKIES</a>
+											
+				</p>
+			
+			
+				<h3 class="subItem-hd"><a >时尚家居</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >睡衣套装</a>
+										<a >开衫式睡衣/家居服</a>
+										<a >全棉家居服</a>
+										<a >套头式睡衣/家居服</a>
+										<a >卡通睡衣/家居服</a>
+										<a >情侣套装</a>
+										<a >睡裙/家居裙</a>
+										<a >连帽睡衣/家居服</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >芬腾</a>
+												<a >秋鹿</a>
+												<a >红豆居家</a>
+												<a >雪俐</a>
+												<a >睦隆世家</a>
+												<a >梦伴</a>
+												<a >淳度</a>
+												<a >帕兰朵</a>
+											
+				</p>
+
+			
+				<h3 class="subItem-hd"><a >精致内衣</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >精品文胸</a>
+										<a >女式内裤</a>
+										<a >男式内裤</a>
+										<a >船袜</a>
+										<a >连裤袜</a>
+										<a  >美腿塑形袜</a>
+										<a  >塑身上衣</a>
+										<a >全棉内裤</a>
+										<a  >聚拢文胸</a>
+										<a >光面文胸</a>
+										<a >塑身分体套装</a>
+										<a >塑身裤</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >爱慕</a>
+												<a  >华歌尔</a>
+												<a >曼妮芬</a>
+												<a >安莉芳</a>
+												<a>歌瑞尔</a>
+												<a  >古今</a>
+												<a >夏娃之秀</a>
+												<a>猫人</a>
+												<a  >婷美</a>
+												<a  >浪莎</a>
+												<a  >健将</a>
+												<a >爱美丽</a>
+												<a  >爱帝</a>
+												<a  >七匹狼</a>
+												<a  >水中花</a>
+												<a >黛安芬</a>
+											
+				</p>
+				
+                
+                                               		    
+			    <a >
+				<img src="images/T1dVzWXbpjXXb12rTm-218-32.png" alt="潮流服饰精选" height="32" width="218">
+			    </a>
+			  
+			  
+			  
+			</div>
+			<div class="hide">
+			   2
+			</div>
+			<div class="hide">
+			   3
+			</div>
+			<div class="hide">
+			   4
+			</div>
+			<div class="hide">
+			   5
+			</div>
+			<div class="hide">
+			    6、手机数码
+			</div>
+			<div class="hide">7、家用电器</div>
+			<div class="hide">8、家具建材</div>
+			<div class="hide">9、家纺/居家</div>
+			<div class="hide">10、母婴玩具</div>
+			<div class="hide">11、食品</div>
+			<div class="hide">12、医药保健</div>
+			<div class="hide">13、汽车配件</div>
+			<div class="hide">
+			   
+			   
+			  
+			</div>
+			<div class="hide">
+			   
+			   	<h3 class="subItem-hd"><a >小猫提货</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >蛋糕</a>
+										<a >咖啡</a>
+										<a >电影</a>
+										<a >门票</a>
+										<a >摄影</a>
+										<a >体检</a>
+										<a >健身</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >麦当劳</a>
+												<a >哈根达斯</a>
+												<a >澳门豆捞</a>
+											
+				</p>
+		
+			
+				<h3 class="subItem-hd"><a >消费卡券</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >餐饮卡券</a>
+										<a >提货券</a>
+										<a >生活服务</a>
+										<a >体检卡</a>
+										<a >培训</a>
+										<a >演出</a>
+										<a >电影</a>
+										<a >赛事</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >一兆韦德</a>
+												<a >爱康国宾</a>
+												<a>上岛咖啡</a>
+												<a>薇薇新娘</a>
+											
+				</p>
+		
+			
+				<h3 class="subItem-hd"><a >门票旅游</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >景点门票</a>
+										<a>旅游线路</a>
+										<a >租车</a>
+										<a >签证</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >中青旅</a>
+												<a >驴妈妈</a>
+												<a>迪斯尼</a>
+												<a>洲际酒店</a>
+												<a >金陵</a>
+												<a>开元</a>
+												<a >布丁</a>
+											
+				</p>
+			
+			
+				<h3 class="subItem-hd"><a >品牌乐器</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >吉他</a>
+										<a >古筝</a>
+										<a >钢琴</a>
+										<a >电子琴</a>
+										<a >口琴</a>
+										<a >风琴</a>
+										<a >萨克斯</a>
+										<a >小/中/大提琴</a>
+										<a >节奏乐</a>
+										<a >西洋鼓</a>
+										<a >民族鼓</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >雅马哈</a>
+												<a>敦煌</a>
+												<a>Ibanez</a>
+												<a >卡西欧</a>
+												<a >星海</a>
+												<a >铃木</a>
+												<a >卓乐</a>
+												<a >Fender</a>
+												<a >奇美</a>
+												<a >迈斯</a>
+												<a >达达里奥</a>
+												<a >爱丽丝</a>
+												<a >超乐士</a>
+												<a >Cherub</a>
+											
+				</p>
+		
+			
+				<h3 class="subItem-hd"><a >鲜花园艺</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >鲜花速递</a>
+										<a >仿真花</a>
+										<a >卡通花</a>
+										<a >园艺用品</a>
+										<a >花卉盆景</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >中礼</a>
+												<a >爱尚</a>
+												<a >贝蕾丝</a>
+												<a >礼之尚</a>
+											
+				</p>
+		
+			
+				<h3 class="subItem-hd"><a>网店软件</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >电脑软件</a>
+										<a >网店装修</a>
+										<a >物流服务</a>
+										<a >多媒体/摄影</a>
+										<a >网络服务</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >万网</a>
+												<a >亮程</a>
+												<a >微软</a>
+												<a >炜禹</a>
+											
+				</p>
+	
+			
+				<h3 class="subItem-hd"><a >古董字画</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >文房四宝</a>
+										<a >中国字画</a>
+										<a >连环画</a>
+										<a >紫砂艺术</a>
+										<a >钱币</a>
+										<a >金石篆刻</a>
+									
+			</p>
+			</div>
+			<div class="hide">
+			   				<h3 class="subItem-hd"><a>话费充值中心</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >移动</a>
+										<a >联通</a>
+										<a>电信</a>
+									
+			</p>
+			            
+                					                	                								
+	
+			
+				<h3 class="subItem-hd"><a >合约购机</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >联通CDMA</a>
+										<a >联通WCDMA</a>
+										<a >移动TD-SCDMA(3G)</a>
+										<a >电信CDMA2000(3G)</a>
+										<a >双模(GSM/CDMA)</a>
+										<a >双模(GSM/CDMA2000)</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">品牌：</h4>
+				<p class="subItem-brand">
+					
+												<a >三星</a>
+												<a >苹果（iphone)</a>
+												<a >华为</a>
+												<a >酷派</a>
+												<a >中兴</a>
+												<a >HTC</a>
+												<a >摩托罗拉</a>
+												<a >天语</a>
+												<a >小米</a>
+												<a >海信</a>
+												<a >诺基亚</a>
+												<a >魅族</a>
+											
+				</p>
+	
+			
+				<h3 class="subItem-hd"><a >老用户预存优惠</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >移动预存优惠</a>
+										<a >联通预存优惠</a>
+										<a >电信预存优惠</a>
+									
+			</p>
+			            
+                					                	                								
+	
+			
+				<h3 class="subItem-hd"><a >3G上网资费卡</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >联通3G上网资费卡</a>
+										<a >电信3G上网资费卡</a>
+										<a >移动3G上网资费卡</a>
+									
+			</p>
+			            
+               
+			
+				<h3 class="subItem-hd"><a >WIFI热点/WLAN套餐</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >中国移动CMCC套餐</a>
+										<a >中国联通china unicom热点套餐</a>
+										<a >中国电信china net热点套餐</a>
+									
+			</p>
+			            
+                	
+		
+			
+				<h3 class="subItem-hd"><a >有线宽带办理</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >电信有线宽带</a>
+										<a>移动有线宽带</a>
+										<a >联通有线宽带</a>
+									
+			</p>
+			            
+                					                	                								
+				
+		
+			
+				<h3 class="subItem-hd"><a >选号入网</a></h3>
+			
+			<p class="subItem-cat">
+				
+										<a >联通手机号</a>
+										<a >移动手机号</a>
+										<a >电信手机号</a>
+									
+			</p>
+			            
+                			
+							<h4 class="subItem-title brandTitle">地域：</h4>
+				<p class="subItem-brand">
+					
+												<a >北京</a>
+												<a >天津</a>
+												<a >上海</a>
+												<a >重庆</a>
+												<a >河北</a>
+												<a >山西</a>
+												<a >内蒙古</a>
+												<a >辽宁</a>
+												<a>吉林</a>
+												<a >黑龙江</a>
+												<a >江苏</a>
+												<a >浙江</a>
+											
+				</p>
+			</div>
+		</div>		
+	</div>
+	<script type="text/javascript" src="js/jquery.tmailsider.js"></script>
+	<script type="text/javascript">
+		$('#Z_TypeList').Z_TMAIL_SIDER();
+	</script>
+	<!--[if IE 6]>
+	<script type="text/javascript" src="js/DD_belatedPNG.js"></script>
+	<script type="text/javascript">
+		DD_belatedPNG.fix('.Z_TypeList .Z_MenuList h3,.Z_TypeList .menuIcon');
+	</script>
+	<![endif]-->
+</body>
+</html>
