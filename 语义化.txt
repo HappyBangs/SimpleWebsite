@@ -1,0 +1,41 @@
+b 元素现在描述为在普通文章中仅从文体上突出的不包含任何额外的重要性的一段文本。例如：文档概要中的关键字，评论中的产品名。或者代表强调的排版方式。
+
+i 元素现在描述为在普通文章中突出不同意见或语气或其他的一段文本，例如：一个分类名称，一个技术术语，一个外语中的谚语，一个想法等。或者代表斜体的排版方式。
+
+
+
+jquery两个查找子元素的区别：
+children(); 查找直接子元素
+find(); 在所有子元素中查找
+
+为jQuery对象永远都有返回值。
+所以不能用if("#sdf"){}来判断id为sdf的元素是否存在，而要用 if("#sdf">0){}'
+
+jquery：
+多余多个图片要记得先隐藏其他图片，再展示当前图片
+$(window),$(document)$("ul")
+
+CSS:
+opacity:不透明级别 。默认值为1，不透明
+transition：CSS的transition允许CSS的属性值在一定的时间区间内平滑地过渡。这种效果可以在鼠标单击、获得焦点、被点击或对元素任何改变中触发，并圆滑地以动画效果改变CSS的属性值
+举例：
+div
+{
+width:100px;
+height:100px;
+background:blue;
+transition:width 2s;
+-moz-transition:width 2s; /* Firefox 4 */
+-webkit-transition:width 2s; /* Safari and Chrome */
+-o-transition:width 2s; /* Opera */
+}
+
+div:hover
+{
+width:300px;
+}
+
+z-index:999; 表示最上层
+
+天猫官网上那么多占位符是什么意思？
+z-index是什么意思？

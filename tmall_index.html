@@ -2,13 +2,23 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html;charset=utf-8">
 	<script src="assets/js/jquery.min.js"></script>
+	<!--<script type="text/javascript" src="assets/js/jquery.mousewheel.min.js"></script>-->
 	<link rel="stylesheet" type="text/css" href="css/tmall-stylesheet.css">
 	<script>
 		$(document).ready(function(){
+			changePic("#banner-women-clothes-div");
+
+			$(document).scroll(function(){
+				/*固定的搜索栏*/
+				if($(window).scrollTop()>=10){//还可以指定滚动条滚动到哪里
+					$("#J_AttachedSearchContainer").slideDown();
+				}else{
+					$("#J_AttachedSearchContainer").slideUp();
+				}
+			});
+
 			$(".drop-down-list").hover(function(){
 				$(this).children(".toggle-div").toggle();
-				// $(".drop-down-list .menu-bd").toggle();
-
 			});
 			$(".menu-nav-container-ul li").mouseenter(function(){
 				$(this).children(".prosmore").fadeIn();
@@ -19,18 +29,7 @@
 				if(li_id){
 					/*图片从大变小的动画效果*/
 					var div_id="#"+li_id+"-div";
-					$(".banner-container").hide();
-					var father_bgColor = $(div_id).attr("bgColor");
-					$("#fp-category-menu").css("background-color",father_bgColor);
-					$(div_id+" img").css("width","840px");
-					$(div_id+" img").css("height","510px");
-					
-					$(div_id).show();
-					$(div_id+" img").animate({
-						width:'810px',/*这里如果换成-=30px,那么我乱晃的时候就会有bug，why*/
-						height:'480px'
-					},"slow");
-
+					changePic(div_id);
 				}
 			});
 			$(".menu-nav-container-ul li").mouseleave(function(){
@@ -39,17 +38,48 @@
 				$(this).css("padding-left","50px");
 
 			});
+
+			/*自定义函数*/
+			function changePic(div_id){
+				$("div .banner-father").hide();
+				var BC=$(div_id).children("div.banner-container");//只是图片部分
+				var BCImg=BC.find("img");
+				var BCEm=BC.find("em");
+				if (BCImg.length==0) {//容错
+					console.warn(div_id+" .banner-container.img not exsits");
+					return;
+				};
+				/*展示前样式准备*/
+				var father_bgColor = $(div_id).attr("bgColor");
+				$("#fp-category-menu").css("background-color",father_bgColor);
+				BCImg.css("width","840px");/*为了有缩小效果，设置为超宽超长的值*/
+				BCImg.css("height","510px");
+
+				/*展示div*/
+				$(div_id).show();//small-banner先展示
+				/*图片从打变小*/
+				BCImg.animate({
+					width:'810px',//这里如果换成-=30px,那么我乱晃的时候就会有bug，why
+					height:'480px'
+				},2500);
+				/*右边小图片进入*/
+				if(BCEm.length>0){
+					BCEm.hide();
+					BCEm.fadeIn(2500);
+				}
+			}
 		});
 	</script>
 	<title>Tmall 天猫</title>
 </head>
 <body>
+	<div id="J_AttachedSearchContainer">sdfsf</div>
 	<div id="site-nav">
 		<div id="sn-bd">
 			<p class="back-home">
 				<a href="https://www.tmall.com">天猫首页</a>
 			</p>
-			<p class="sn-login-part">
+			<p class="sn-login-part"
 				<em>欢迎来到天猫</em>
 				<a href="">请登录</a>
 				<a href="">免费注册</a>
@@ -159,12 +189,45 @@
 						<li>零食</li>
 						<li>母婴玩具</li>
 					</ul>
-
 				</div>
-				<div id="banner-women-clothes-div" style="display:block;" class="banner-container" bgColor="rgb(221,221,221)"><img src="images/huandengpian4.jpg"></div>
-				<div id="banner-shoes-div" class="banner-container" bgColor="white"><img src="images/adidas-big.jpg"></div>
+				<div id="banner-women-clothes-div" class="banner-father" bgColor="rgb(221,221,221)">
+					<div  style="display:block;" class="banner-container">
+						<a href="">
+							<img src="images/huandengpian4.jpg">
+						</a>
+					</div>
+					<div class="small-banner">
+						<div style="height:50%">
+							23423
+						</div>
+						<b class="banner-separator"></b>
+						<div style="height:50%">
+							324
+						</div>
+					</div>	
+				</div>
+				<div id="banner-shoes-div" class="banner-father" bgColor="white">
+					<div  class="banner-container" bgColor="white">
+						<a href="">
+							<img src="images/adidas-big.jpg">
+							<em style="background:url('images/adidas-sneak.png')  no-repeat center center; "></em>
+						</a>
+					</div>
+					<div class="small-banner">
+						<div style="height:50%">
+							aabbc
+						</div>
+						<b class="banner-separator"></b>
+						<div style="height:50%">
+							asdf
+						</div>
+					</div>	
+				</div>
+
 			</div>
-			
+		</div>
+		<div id="main-container">
+			jklsdf
 		</div>
 	</div>
 </body>

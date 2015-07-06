@@ -57,16 +57,15 @@ body {
 		#site-nav{
 			/*页顶导航条*/
 			height: 26px;
-  			line-height: 26px;
+  		line-height: 26px;
 			color: #999;
 			min-width: 990px;
  			width: auto;
-  			position: relative!important;
-  			background: #f2f2f2;
-  			z-index: 99999;
-  			-webkit-transform: translate3d(0,0,0);
-  			border-bottom: 1px solid #e5e5e5;
-  			position: relative;
+  		position: relative!important;
+  		background: #f2f2f2;
+  		-webkit-transform: translate3d(0,0,0);
+  		border-bottom: 1px solid #e5e5e5;
+  		position: relative;
 		}
 		.logo-pic{
 			background-color:red;
@@ -215,7 +214,7 @@ body {
 			padding-left:12px;
         }
         #content{
-        	position: relative;
+       position: relative;
   			width: auto;
   			margin: 0;
   			padding-bottom: 30px;
@@ -249,11 +248,14 @@ body {
   			left: 0;
   			width: 100%;
         background-color: rgb(221,221,221);
+        font-family: 'Microsoft YaHei';
 		    /*border:1px solid black;*/
         }
         .category-nav-container{
+          position: relative;
         	width: 1190px;
         	margin: auto;
+          border:1px solid black;
         }
         .category-menu-nav{
         	position: relative;
@@ -302,19 +304,73 @@ body {
   width: 107px;
   line-height: 22px;
 }
+
 .banner-container{
   position:absolute;
   top:0;
-  left:235px;
-  display: none;
+  left:190px;
   overflow: hidden;
-  /*border:1px solid black;*/
   width: 810px;
   height:480px;
 }
 .banner-container img{
+  position:relative;
   width: 810px;
   height:480px;
   margin:auto;
   display: block;
   }
+.banner-container em{
+  display:block;
+  width: 405px;
+  height: 480px;
+  position:absolute;
+  top:0px;
+  right:0px;
+}
+.small-banner{
+  position:absolute;
+  right:0px;
+  top:0px;
+  border:1px solid red;
+  width:192px;
+  height: 480px;
+  opacity: 0.5px;
+  background-color: white;
+}
+.banner-father{
+  display: none;
+}
+/*small bannerD的样式 start*/
+.banner-separator {
+  display: block;
+  height: 0;
+  font-size: 0;
+  line-height: 0;
+  border-top: 2px dotted #eee;
+}
+
+/*small bannerD的样式 end*/
+/*顶部搜索栏*/
+#J_AttachedSearchContainer{
+  display: block;
+  margin: 0 auto;
+  position: fixed;
+  top: 0;
+  left:0;
+  height: 50px;
+  width: 100%;
+  opacity: .8;
+  overflow: hidden;
+  z-index:999;
+  background-color: #000;
+  display: none;
+}
+
+/*幻灯片下方的main container*/
+#main-container{
+  width: 1190px;
+  margin: auto;
+  border:1px solid yellow;
+  height:900px;
+}
