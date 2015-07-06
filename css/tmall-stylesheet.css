@@ -36,6 +36,42 @@ body {
     .bg-red{
       background-color:#c40000;
     }
+    .search-float-form{
+      width:740px;
+      border:0;
+      background-color:white;
+      opacity: 1;
+      height: 30px;
+      margin: auto;
+      top:10px;
+      position: relative;
+    }
+    .search-float-form input{
+      width: 640px;
+      height:25px;
+      position: relative;
+      background: 0 0;
+      line-height: 22px;
+      padding:2px 5px;
+      width: 630px;
+      border:0;
+      outline:none;
+    }
+    .search-float-form button{
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100px;
+      height: 30px;
+      font-size: 16px;
+      letter-spacing: 4px;
+      cursor: pointer;
+      color: #fff;
+      background-color: #c40000;
+      overflow: hidden;
+      border: 0;
+      font-family: '\5FAE\8F6F\96C5\9ED1',arial,"\5b8b\4f53";
+    }
 		.right-ul{
 			display:inline-block;
 			position: absolute;
@@ -217,13 +253,14 @@ body {
        position: relative;
   			width: auto;
   			margin: 0;
-  			padding-bottom: 30px;
-        }
-        .top-main-container{
-            position: relative;
-  			width: 1190px;
-  			margin: auto;
-        }
+/*  			padding-bottom: 30px;
+*/        }
+.top-main-container{
+  position: relative;
+	width: 1190px;
+	margin: auto;
+  background-color: white;
+}
         #J_FpMainNav{
         	list-style: none;
         	position: relative;
@@ -255,7 +292,7 @@ body {
           position: relative;
         	width: 1190px;
         	margin: auto;
-          border:1px solid black;
+          /*border:1px solid black;*/
         }
         .category-menu-nav{
         	position: relative;
@@ -297,6 +334,7 @@ body {
   width:220px;
   height:446px;
   display: none;
+  opacity: .85;
 }
 .prosmore span{
   float: left;
@@ -328,26 +366,24 @@ body {
   top:0px;
   right:0px;
 }
-.small-banner{
-  position:absolute;
-  right:0px;
-  top:0px;
-  border:1px solid red;
-  width:192px;
-  height: 480px;
-  opacity: 0.5px;
-  background-color: white;
-}
 .banner-father{
   display: none;
 }
 /*small bannerD的样式 start*/
+.small-banner{
+  position:absolute;
+  right:0px;
+  top:0px;
+  width:192px;
+  height: 480px;
+  opacity: .85
+}
 .banner-separator {
   display: block;
   height: 0;
   font-size: 0;
   line-height: 0;
-  border-top: 2px dotted #eee;
+  border-top: 1px dotted #eee;
 }
 
 /*small bannerD的样式 end*/
@@ -368,9 +404,199 @@ body {
 }
 
 /*幻灯片下方的main container*/
-#main-container{
+.second-container{
+  /*父元素背景*/
+  background-color: rgb(242,242,242);
+
+}
+.middle-pic{
+  position: relative;
   width: 1190px;
   margin: auto;
-  border:1px solid yellow;
-  height:900px;
+  padding-top:25px;
+}
+.main-container{
+  position: relative;
+  width: 1190px;
+  margin: auto;
+  padding-top:15px;
+  height: 376px;
+}
+.brand-title{
+  display: inline-block;
+  background: url(../images/hot-brand.png) no-repeat;
+  background-size: 167px 18px;
+  position: absolute;
+  top: 21px;
+  left: 0;
+  margin: 15px 0 8px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #000;
+  text-indent: -1000em;
+  width: 192px;
+}
+.j_LazyShowBG{
+  display: block;
+  height: 50px;
+
+}
+.brand-content{
+  position: relative;
+}
+.brand-first{
+  position: absolute;
+  width: 182px;
+  height: 318px;
+  left:0;
+  top:0;
+}
+.floor-show-top li{
+  display: inline-block;
+  padding-top:35px;
+  padding-left:10px;
+}
+.brand-last{
+  position: relative;
+  right:0;
+  top:0;
+  width: 182px;
+  height: 318px;
+  padding: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+/*主内容右侧的豆腐块*/
+.brand-rec-slide{
+  position: relative;
+  float: left;
+  width: 810px;
+  margin-left: 190px;
+}
+.brand-rec-nav{
+  list-style: none;
+  position: absolute;
+  top:-27px;
+}
+.brand-rec-nav li{
+  display: inline-block;
+  height: 15px;
+  line-height: 15px;
+  margin: 0 15px;
+  cursor: pointer;
+  color: #666;
+}
+.brand-rec-nav .selected {
+  color: #000;
+  font-weight: 700;
+  border-bottom: 2px solid #000;
+}
+.brand-rec-content{
+  position: relative;
+  top:-1px;
+  padding: 0 2px 0 4px;
+  width: 806px;
+  height: 326px;
+  margin:0;
+}
+.brand-rec-content a{
+  display: block;
+  position: relative;
+  float: left;
+  width: 132px;
+  height: 80px;
+  transition: height .3s ease;
+  text-align: center;
+  background-color: white;
+  text-decoration: none;
+  margin:1px;
+}
+.brand-rec-content a img{
+  padding-top:15px;
+}
+/*主要展示内容，楼层和概况*/
+.floor{
+  position: relative;
+  width: 1190px;
+  margin: auto;
+  margin-top:28px;
+  height: 422px;
+}
+.floor-show-first{
+  position: absolute;
+  width: 191px;
+  height: 422px;
+  display: inline-block;
+}
+.floor-show-top{
+  list-style: none;
+  background: url(../images/floors.png) no-repeat #f5f5f5;
+  background-position: 0 0;
+  height: 90px;
+  color: #fff;
+  overflow: hidden;
+  text-align: center;
+}
+.floor-show-middle{
+  position: relative;
+  height: 202px;
+  overflow: hidden;
+  background-color: white; 
+}
+.floor-show-bottom{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: #fafaf8;
+  width: 100%;
+  height: 130px;
+}
+.floor-show-bottom img{
+  width: 100%;
+  height: 130px;
+}
+.floor-show-second{
+  margin-left:192px;
+  position:relative;
+  display:inline-block;
+  width:400px ;
+  height:422px; 
+}
+.floor-show-third{
+  position:absolute;
+  right:0;
+  top:0;
+  display:inline-block;
+  width:596px;
+  height:422px; 
+}
+.floor-show-third ul{
+  position: relative;
+  list-style: none;
+  top:-1px;
+}
+.floor-show-third li{
+  float: left;
+  width: 197px; 
+  margin:0.5px;
+  background-color: white;
+}
+.row1{
+  height: 255px;
+}
+.row1 img{
+  width: 193px;
+  height: 255px;
+  padding-left:4px;
+
+}
+.row2{
+  height:167px;
+}
+.row2 img{
+  height:167px;
+  width: 193px;
+  padding-left:4px;
 }

@@ -10,10 +10,13 @@
 
 			$(document).scroll(function(){
 				/*固定的搜索栏*/
-				if($(window).scrollTop()>=10){//还可以指定滚动条滚动到哪里
-					$("#J_AttachedSearchContainer").slideDown();
+				if($(window).scrollTop()>=716){//还可以指定滚动条滚动到哪里
+					// console.log($(window).scrollTop());
+					$("#J_AttachedSearchContainer form").show();
+					$("#J_AttachedSearchContainer").slideDown("fast");
 				}else{
-					$("#J_AttachedSearchContainer").slideUp();
+					$("#J_AttachedSearchContainer form").hide();
+					$("#J_AttachedSearchContainer").slideUp("fast");
 				}
 			});
 
@@ -38,7 +41,16 @@
 				$(this).css("padding-left","50px");
 
 			});
+			$(".floor-show-third ul li").mouseenter(function(){
+				$(this).children("img").animate({padding:'0px'},300);
+			});
+			$(".floor-show-third ul li").mouseleave(function(){
+				$(this).children("img").animate({padding:'0px 0px 0px 4px'},300);
+			});
 
+			$(".brand-rec-nav li").hover(function(){
+				$(this).toggleClass("selected");
+			});
 			/*自定义函数*/
 			function changePic(div_id){
 				$("div .banner-father").hide();
@@ -73,7 +85,12 @@
 	<title>Tmall 天猫</title>
 </head>
 <body>
-	<div id="J_AttachedSearchContainer">sdfsf</div>
+	<div id="J_AttachedSearchContainer">
+		<form class="search-float-form">
+				<input placeholder="家电换新季，给你清凉一夏">
+				<button type="submit">搜索</button>
+		</form>
+	</div>
 	<div id="site-nav">
 		<div id="sn-bd">
 			<p class="back-home">
@@ -164,7 +181,7 @@
 						<li>零食</li>
 						<li>进口产品</li>
 						<li>精选市场</li>
-						<li>母婴玩具</li>
+						<li id="banner-child">母婴玩具-hoverme</li>
 						<li>化妆品</li>
 						<li>化妆品</li>
 						<li id="banner-shoes">零食-hoverme					
@@ -190,24 +207,33 @@
 						<li>母婴玩具</li>
 					</ul>
 				</div>
+				<div id="banner-child-div" class="banner-father" bgColor="rgb(255,182,114)">
+					<div  style="display:block;" class="banner-container">
+						<a href="">
+							<img src="images/children.jpg">
+							<em style="background:url('images/childrenLit.png')  no-repeat center center; "></em>
+						</a>
+					</div>
+					<div class="small-banner">
+						<div style="height:50%">
+							<img src="images/book.png">
+						</div>
+						<b class="banner-separator"></b>
+						<div style="height:50%">
+							<img src="images/bag.png">
+						</div>
+					</div>	
+				</div>
 				<div id="banner-women-clothes-div" class="banner-father" bgColor="rgb(221,221,221)">
 					<div  style="display:block;" class="banner-container">
 						<a href="">
 							<img src="images/huandengpian4.jpg">
 						</a>
 					</div>
-					<div class="small-banner">
-						<div style="height:50%">
-							23423
-						</div>
-						<b class="banner-separator"></b>
-						<div style="height:50%">
-							324
-						</div>
-					</div>	
+					
 				</div>
 				<div id="banner-shoes-div" class="banner-father" bgColor="white">
-					<div  class="banner-container" bgColor="white">
+					<div  class="banner-container" >
 						<a href="">
 							<img src="images/adidas-big.jpg">
 							<em style="background:url('images/adidas-sneak.png')  no-repeat center center; "></em>
@@ -215,19 +241,93 @@
 					</div>
 					<div class="small-banner">
 						<div style="height:50%">
-							aabbc
+							<img src="images/rabit.png">
 						</div>
 						<b class="banner-separator"></b>
 						<div style="height:50%">
-							asdf
+							<img src="images/makalong.png">
 						</div>
 					</div>	
 				</div>
 
 			</div>
 		</div>
-		<div id="main-container">
-			jklsdf
+		<div class="second-container">
+			<div class="main-container">
+				<div class="j_LazyShowBG">
+					<a class="brand-title" href="">热门品牌</a>
+				</div>
+				<div class="brand-content"> 
+					<div class="brand-first">
+						<a href="">
+							<img src="images/brand-first.jpg">
+						</a>
+					</div>
+					<div id="J_BrandRecSlide" class="brand-rec-slide">
+						<ul class="brand-rec-nav">
+							<li class="selected">国际大牌</li>
+							<li>时尚潮牌</li>
+							<li>国内名牌</li>
+							<li>天猫原创</li>
+						</ul>
+						<p class="brand-rec-content">
+							<a href=""><img src="images/adidas.jpg"></a>
+							<a href=""><img src="images/heynature.jpg"></a>
+							<a href=""><img src="images/fujifilm.jpg"></a>
+							<a href=""><img src="images/adidas.jpg"></a>
+							<a href=""><img src="images/heynature.jpg"></a>
+							<a href=""><img src="images/fujifilm.jpg"></a>
+							<a href=""><img src="images/adidas.jpg"></a>
+							<a href=""><img src="images/heynature.jpg"></a>
+							<a href=""><img src="images/fujifilm.jpg"></a>
+							<a href=""><img src="images/adidas.jpg"></a>
+							<a href=""><img src="images/heynature.jpg"></a>
+							<a href=""><img src="images/fujifilm.jpg"></a>
+							<a href=""><img src="images/adidas.jpg"></a>
+							<a href=""><img src="images/heynature.jpg"></a>
+							<a href=""><img src="images/fujifilm.jpg"></a>
+							<a href=""><img src="images/adidas.jpg"></a>
+							<a href=""><img src="images/heynature.jpg"></a>
+							<a href=""><img src="images/fujifilm.jpg"></a>
+							<a href=""><img src="images/adidas.jpg"></a>
+							<a href=""><img src="images/heynature.jpg"></a>
+							<a href=""><img src="images/fujifilm.jpg"></a>
+							<a href=""><img src="images/adidas.jpg"></a>
+							<a href=""><img src="images/heynature.jpg"></a>
+							<a href=""><img src="images/fujifilm.jpg"></a>
+						</p>
+					</div>
+				</div>
+				<div class="brand-last">
+						<a href="">
+							<img src="images/uniqlo.jpg">
+						</a>
+				</div>
+			</div>
+			<div class="middle-pic"><img src="images/middle-pic.jpg"></div>
+ 			<div class="floor"> 
+				<div class="floor-show-first">
+					<ul class="floor-show-top"><li>美妆</li><li>|</li><li>护肤</li></ul>
+					<div class="floor-show-middle"></div>
+					<div class="floor-show-bottom">
+						<img src="images/meizhuang.jpg">
+					</div>
+				</div>
+				<div class="floor-show-second">
+					<img src="images/shoes.jpg">
+				</div>
+				<div class="floor-show-third" style="">
+					<ul>
+						<li class="row1"><img src="images/pic1.jpg"></li>
+						<li class="row1"><img src="images/pic2.jpg"></li>
+						<li class="row1"><img src="images/pic3.jpg"></li>
+						<li class="row2"><img src="images/pic4.jpg"></li>
+						<li class="row2"><img src="images/pic5.jpg"></li>
+						<li class="row2"><img src="images/pic6.jpg"></li>
+					</ul>
+				</div>
+			</div>
 		</div>
+		
 	</div>
 </body>
