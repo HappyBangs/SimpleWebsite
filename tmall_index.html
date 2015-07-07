@@ -2,86 +2,9 @@
 <head>
 	<meta http-equiv="Content-type" content="text/html;charset=utf-8">
 	<script src="assets/js/jquery.min.js"></script>
-	<!--<script type="text/javascript" src="assets/js/jquery.mousewheel.min.js"></script>-->
+	<script type="text/javascript" src="assets/js/jquery.tmall.index.js"></script>
+	<script type="text/javascript" src="assets/js/jquery.lazyload.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/tmall-stylesheet.css">
-	<script>
-		$(document).ready(function(){
-			changePic("#banner-women-clothes-div");
-
-			$(document).scroll(function(){
-				/*固定的搜索栏*/
-				if($(window).scrollTop()>=716){//还可以指定滚动条滚动到哪里
-					// console.log($(window).scrollTop());
-					$("#J_AttachedSearchContainer form").show();
-					$("#J_AttachedSearchContainer").slideDown("fast");
-				}else{
-					$("#J_AttachedSearchContainer form").hide();
-					$("#J_AttachedSearchContainer").slideUp("fast");
-				}
-			});
-
-			$(".drop-down-list").hover(function(){
-				$(this).children(".toggle-div").toggle();
-			});
-			$(".menu-nav-container-ul li").mouseenter(function(){
-				$(this).children(".prosmore").fadeIn();
-				$(this).addClass("bg-red");
-				$(this).css("padding-left","55px");
-
-				var li_id=$(this).attr("id");
-				if(li_id){
-					/*图片从大变小的动画效果*/
-					var div_id="#"+li_id+"-div";
-					changePic(div_id);
-				}
-			});
-			$(".menu-nav-container-ul li").mouseleave(function(){
-				$(this).children(".prosmore").fadeOut();
-				$(this).removeClass("bg-red");
-				$(this).css("padding-left","50px");
-
-			});
-			$(".floor-show-third ul li").mouseenter(function(){
-				$(this).children("img").animate({padding:'0px'},300);
-			});
-			$(".floor-show-third ul li").mouseleave(function(){
-				$(this).children("img").animate({padding:'0px 0px 0px 4px'},300);
-			});
-
-			$(".brand-rec-nav li").hover(function(){
-				$(this).toggleClass("selected");
-			});
-			/*自定义函数*/
-			function changePic(div_id){
-				$("div .banner-father").hide();
-				var BC=$(div_id).children("div.banner-container");//只是图片部分
-				var BCImg=BC.find("img");
-				var BCEm=BC.find("em");
-				if (BCImg.length==0) {//容错
-					console.warn(div_id+" .banner-container.img not exsits");
-					return;
-				};
-				/*展示前样式准备*/
-				var father_bgColor = $(div_id).attr("bgColor");
-				$("#fp-category-menu").css("background-color",father_bgColor);
-				BCImg.css("width","840px");/*为了有缩小效果，设置为超宽超长的值*/
-				BCImg.css("height","510px");
-
-				/*展示div*/
-				$(div_id).show();//small-banner先展示
-				/*图片从打变小*/
-				BCImg.animate({
-					width:'810px',//这里如果换成-=30px,那么我乱晃的时候就会有bug，why
-					height:'480px'
-				},2500);
-				/*右边小图片进入*/
-				if(BCEm.length>0){
-					BCEm.hide();
-					BCEm.fadeIn(2500);
-				}
-			}
-		});
-	</script>
 	<title>Tmall 天猫</title>
 </head>
 <body>
@@ -304,11 +227,39 @@
 						</a>
 				</div>
 			</div>
-			<div class="middle-pic"><img src="images/middle-pic.jpg"></div>
- 			<div class="floor"> 
+			<div class="middle-pic">
+				<img src="images/middle-pic.jpg">
+			</div>
+			<div class="floor">
 				<div class="floor-show-first">
-					<ul class="floor-show-top"><li>美妆</li><li>|</li><li>护肤</li></ul>
-					<div class="floor-show-middle"></div>
+					<ul class="floor-show-top">
+						<li>美妆</li>
+						<li>|</li>
+						<li>护肤</li>
+					</ul>
+					<div class="floor-show-middle">
+						<a class="floor-show-middle-arrow arrow-left"  title="上一个幻灯片"></a>
+						<a  class="floor-show-middle-arrow  arrow-right"   title="下一个幻灯片"></a>
+						<div class="brand-slide-content">
+							<div class="brand-slide-bg" index="1">
+								<p>
+									<a href=""><img src="images/1-1.jpg"></a>
+									<a href=""><img src="images/1-2.jpg"></a>
+									<a href=""><img src="images/1-3.jpg"></a>
+								</p>
+								<p>
+									<a href=""><img src="images/2-1.jpg"></a>
+									<a href=""><img src="images/2-2.jpg"></a>
+									<a href=""><img src="images/2-3.jpg"></a>
+								</p>
+								<p>
+									<a href=""><img src="images/3-1.jpg"></a>
+									<a href=""><img src="images/3-2.jpg"></a>
+									<a href=""><img src="images/3-3.jpg"></a>
+								</p>
+							</div>
+						</div>
+					</div>
 					<div class="floor-show-bottom">
 						<img src="images/meizhuang.jpg">
 					</div>
@@ -316,7 +267,7 @@
 				<div class="floor-show-second">
 					<img src="images/shoes.jpg">
 				</div>
-				<div class="floor-show-third" style="">
+				<div class="floor-show-third">
 					<ul>
 						<li class="row1"><img src="images/pic1.jpg"></li>
 						<li class="row1"><img src="images/pic2.jpg"></li>
@@ -328,6 +279,5 @@
 				</div>
 			</div>
 		</div>
-		
 	</div>
 </body>
