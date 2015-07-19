@@ -145,7 +145,7 @@ $(document).ready(function(){
 	});
 	/*小的滑动的幻灯片end*/
 
-	//autoMove();
+	autoMove();
 	
 });
 	/*自定义函数*/

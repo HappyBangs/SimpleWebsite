@@ -48,51 +48,29 @@ $(document).ready(function(){
 		$(this).toggleClass("selected");
 	});
 	/*小的滑动的幻灯片begin*/
-	$(".arrow-left").click(function(){
-		var p_length=100;//p元素的宽度
-		var father_div=$(this).parent();//class 为floor-show-middle的div
-		var slide_div=father_div.children(".brand-slide-content").children(".brand-slide-bg");//class为brand-slide-bg的div
-		var pic_index=slide_div.attr("index");//当前图片的索引
-		var p_quantities=slide_div.children("p").length;
-		if (pic_index==1) {
-			pic_index=p_quantities;
-			var last_p=slide_div.children("p").last();
-			slide_div.css("left","-100px");
-			slide_div.children("p").first().before(last_p.clone());
-			slide_div.animate({
-					left:0
-				},700,
-				function(){
-					//回调函数，删除添加的p
-					slide_div.children("p").first().remove();//删除为了滑动而添加的元素
-					var left=getLeft(p_length,pic_index);
-					slide_div.css("left",left);
-			});
-		}else{
-			pic_index--;
-			var left=getLeft(p_length,pic_index);//相对于父容器向左移动的值
-			slide_div.animate({
-				left:left
-			},700);
-		}
-		slide_div.attr("index",pic_index);
-	});
-	$(".arrow-right").click(function(){
-		var slide_div=$(this).siblings(".brand-slide-content").children(".brand-slide-bg");//滑动幻灯片的父div
-		var index=slide_div.attr("index");//当前图片的索引，默认为1
-		index++;
-		slide_div.stop();
-		var position=index*(-100)+"px";
-		if(index==2){
-			slide_div.css("-webkit-transform-origin","-100px 0 0");
-		}
-		slide_div.css("-webkit-transition-duration","0.5s");
-		slide_div.css("-webkit-transform","translate3d("+position+",0,0)");
-		slide_div.attr("index",index);
-	});
+	$(".brand-slide-bg").children().bind('webkitAnimationStart', function() {
+       $(this).parent(".brand-slide-bg").attr("is-animating","true");     
+    });
+    $(".brand-slide-bg").children().bind('webkitAnimationEnd', function() {
+        $(this).removeClass("moveFromRight");
+        $(this).removeClass("moveFromLeft");
+        if($(this).hasClass("moveToLeft") || $(this).hasClass("moveToRight")){
+            $(this).removeClass("page-current");
+        } 
+        $(this).removeClass("moveToLeft");
+        $(this).removeClass("moveToRight");
+        $(this).parent(".brand-slide-bg").attr("is-animating","false");       
+    });
+	$(".arrow-right").click(function() {
+        slide_div=$(this).siblings(".brand-slide-content").children(".brand-slide-bg");
+        moveLittlePage(slide_div,"right","moveFromLeft","moveToRight");       
+    });
+    $(".arrow-left").click(function() {
+        slide_div=$(this).siblings(".brand-slide-content").children(".brand-slide-bg");
+        moveLittlePage(slide_div,"left","moveFromRight","moveToLeft");       
+    });
 	/*小的滑动的幻灯片end*/
 
-	//autoMove();
 	$(".brand-slide-bg").bind('webkitTransitionEnd', function(){
 		index=$(this).attr("index");
 		if(index==4){
@@ -102,6 +80,7 @@ $(document).ready(function(){
 			$(this).attr("index",index);
 		}
 	});
+	autoMove();
 });
 	/*自定义函数*/
 
@@ -137,46 +116,36 @@ function changePic(div_id){
 		BCEm.fadeIn(800);
 	}
 }
-function getLeft(p_width,index){
-	/*楼层幻灯片，根据p元素的索引1-3确定左边和父元素的距离*/
-	return (index-1) * p_width *(-1)+"px";
-}
 function autoMove(){
-	var slide_div=$(".brand-slide-bg");//滑动幻灯片的父div
-	var index=slide_div.attr("index");//当前图片的索引，默认为1
-	index++;
-	var right_position=index*(-100)+"px";
-	slide_div.animate({
-		right:right_position
-	},700);
-	autoTask=setTimeout("autoMove()",2000);
-	/*var p_length=100;//p元素的宽度
-	var slide_div=$(".brand-slide-bg");//class为brand-slide-bg的div
-	var pic_index=slide_div.attr("index");//当前图片的索引
-	var p_quantities=slide_div.children("p").length;
-	slide_div.clearQueue();
-	if (pic_index==1) {
-		pic_index=p_quantities;
-		var last_p=slide_div.children("p").last();
-		slide_div.css("left","-100px");
-		slide_div.children("p").first().before(last_p.clone());
-
-		slide_div.animate({
-				left:0
-			},700,
-			function(){
-				//回调函数，删除添加的p
-				slide_div.children("p").first().remove();//删除为了滑动而添加的元素
-				var left=getLeft(p_length,pic_index);
-				slide_div.css("left",left);
-		});
-	}else{
-		pic_index--;
-		var left=getLeft(p_length,pic_index);//相对于父容器向左移动的值
-		slide_div.animate({
-			left:left
-		},800);
-	}
-	slide_div.attr("index",pic_index);
-	autoTask=setTimeout("autoMove()",2000);*/
+    moveLittlePage($(".brand-slide-bg").first(),"right","moveFromLeft","moveToRight");      
+    moveLittlePage($(".brand-slide-bg").last(),"right","moveFromLeft","moveToRight");     
+    autoTask=setTimeout("autoMove()",4000);
+}
+function moveLittlePage(slide_div,way,from_css,to_css){
+	/*入参：slide_div 要滑动的元素所在的父元素
+		   way： left或者right左边活着右边
+		   from_css:上一个元素怎么做
+		   to_css: 本元素怎么做
+	*/
+    if(slide_div.attr("is-animating")=="true"){return;}//动画未结束不能开始
+    var current_css="page-current";
+    var current_p=slide_div.children(".page-current");
+    current_p.addClass(to_css);
+    if(way=="left"){
+        if (current_p.next().length<=0) {
+            slide_div.children().first().addClass(from_css);
+            slide_div.children().first().addClass(current_css);
+        }else{
+            current_p.next().addClass(from_css);
+            current_p.next().addClass(current_css);
+        }  
+    }else if(way=="right"){
+        if (current_p.prev().length<=0) {
+            slide_div.children().last().addClass(from_css);
+            slide_div.children().last().addClass(current_css);
+        }else{
+            current_p.prev().addClass(from_css);
+            current_p.prev().addClass(current_css);
+        }  
+    }  
 }
