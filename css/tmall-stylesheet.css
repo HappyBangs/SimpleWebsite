@@ -24,6 +24,9 @@ a:hover{
 	color: #c40000;
 	text-decoration:underline; 
 }
+.floor_loading{
+  background: url(https://img.alicdn.com/tps/i1/TB1Q4fJFVXXXXXiXFXXJgUmHVXX-184-38.gif) no-repeat scroll 50% 50% #f5f5f5;
+}
 .hidden{
 	display: none;
 }
@@ -406,7 +409,7 @@ background: url('../images/menubarbg.png') #181818 no-repeat;
 /*幻灯片下方的main container*/
 .second-container{
   /*父元素背景*/
-  background-color: rgb(242,242,242);
+  background-color: rgb(245,245,245);
 
 }
 .middle-pic{
